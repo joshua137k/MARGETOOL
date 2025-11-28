@@ -1,123 +1,198 @@
 package marge.syntax
 
-import cats.parse.{Parser => P, Parser0 => P0}
-import cats.parse.Rfc5234.{alpha, digit, wsp}
 import marge.syntax.Formula.*
 import marge.syntax.PdlProgram.*
 import marge.syntax.Program2.QName
 import marge.syntax.Condition
-import cats.parse.Parser.*
-
-/**
- * Supports:
- *  - Logical operators: ~, ¬, &&, ∧, ||, =>, ->, <-> 
- *  - Modal operators: [] (Box), <> (Diamond)
- *  - Dynamic modalities: [action]φ, <a>φ
- *  - Identifiers must not start with a digit.
- */
-
+import scala.util.matching.Regex
 
 object PdlParser {
-  def parsePdlFormula(str: String): Formula = ModalParser.parseFormula(str) match {
-    case Left(err) => throw new RuntimeException(s"PDL Parsing Error: $err")
-    case Right(formula) => formula
-  }
-}
 
-
-object ModalParser {
-
-  private val sps: P0[Unit] = wsp.rep0.void
-  private val identHead: P[Char] = alpha.orElse(P.charIn('_'))
-  private val identTail: P0[Unit] =
-    (alpha.void | digit.void | P.char('_') | P.char('-')).rep0.void
-  private val ident: P[String] =
-    (identHead ~ identTail).string.surroundedBy(sps)
-
-  private val pdlIdent: P[String] = (identHead ~ identTail).string
-  private val pdlQNameParser: P[QName] = pdlIdent.repSep(P.char('/')).map(parts => QName(parts.toList))
-  private val qualifiedIdentString: P[String] =
-    pdlIdent.repSep(P.char('/')).map(_.toList.mkString("/")).surroundedBy(sps)
-  
-  private def integer: P[Int] = digit.rep(1).string.map(_.toInt)
-  private def double: P[Double] = {
-    val unsignedPart = digit.rep(1) ~ (P.char('.') *> digit.rep(1)).?
-    val signedPart = P.char('-') *> unsignedPart
-    (signedPart | unsignedPart).string.map(_.toDouble)
+  def parsePdlFormula(str: String): Formula = {
+    val tokens = tokenize(str)
+    if (tokens.isEmpty) throw new RuntimeException("Formula cannot be empty")
+    val reader = new TokenReader(tokens)
+    val formula = parseFormula(reader)
+    if (reader.hasNext) throw new RuntimeException(s"Tokens inesperados no fim: ${reader.current}")
+    formula
   }
 
-  private def numberOrQName: P[Either[Double, QName]] =
-    double.map(Left(_)) | pdlQNameParser.map(Right(_))
-
-  private def comparisonOp: P[String] = (
-    P.string(">=").as(">=") | P.string("<=").as("<=") |
-    P.string("==").as("==") | P.string("!=").as("!=") |
-    P.string(">").as(">")   | P.string("<").as("<")
-  ).surroundedBy(sps)
-  private def intOrQName: P[Either[Int, QName]] =
-    integer.map(Left(_)) | pdlQNameParser.map(Right(_))
-
-  private def pdlConditionParser: P[Condition] =
-    (pdlQNameParser ~ comparisonOp ~ numberOrQName)
-      .map { case ((left, op), right) => Condition.AtomicCond(left, op, right) }
-
-  private def sym(s: String): P[Unit] = P.string(s).surroundedBy(sps)
-
-  private lazy val progAtom: P[PdlProgram] = P.defer {
-    val act: P[PdlProgram] = pdlQNameParser.map(Act.apply)
-    val parens: P[PdlProgram] = PdlProgram.between(sym("("), sym(")"))
-    parens | act
+  private def tokenize(input: String): List[String] = {
+    val pattern = """(<->|->|=>|&&|\|\||&\|&|\[\]|<>|==|!=|<=|>=|[!~\[\]\(\)\{\};\+\*<>]|[a-zA-Z_][\w\.]*(\/[a-zA-Z_][\w\.]*)*|-?\d+(\.\d+)?)""".r
+    pattern.findAllIn(input).toList
   }
 
-  private lazy val progStar: P[PdlProgram] =
-    (progAtom ~ sym("*").rep0).map { case (p, stars) =>
-      if (stars.isEmpty) p else Star(p)
+  private class TokenReader(tokens: List[String]) {
+    var pos = 0
+    def current: String = if (pos < tokens.length) tokens(pos) else ""
+    def hasNext: Boolean = pos < tokens.length
+    def consume(): String = { val t = current; pos += 1; t }
+    def eat(s: String): Boolean = if (current == s) { pos += 1; true } else false
+    def expect(s: String): Unit = if (!eat(s)) throw new RuntimeException(s"Esperado '$s', encontrado '$current'")
+  }
+
+
+  private def parseFormula(reader: TokenReader): Formula = parseIff(reader)
+
+  private def parseIff(reader: TokenReader): Formula = {
+    var left = parseImpl(reader)
+    while (reader.current == "<->") {
+      reader.consume()
+      val right = parseImpl(reader)
+      left = Iff(left, right)
     }
-
-  private def leftAssocP(op: P[Unit], next: P[PdlProgram], cons: (PdlProgram, PdlProgram) => PdlProgram): P[PdlProgram] =
-    (next ~ (op *> next).rep0).map { case (h, t) => t.foldLeft(h)(cons) }
-
-  private lazy val progSeq: P[PdlProgram]   = leftAssocP(sym(";"), progStar, Seq.apply)
-  private lazy val progChoice: P[PdlProgram]= leftAssocP(sym("+"), progSeq, Choice.apply)
-
-  private lazy val PdlProgram: P[PdlProgram] = progChoice
-
-  private def leftAssocF(op: P[Unit], next: P[Formula], cons: (Formula, Formula) => Formula): P[Formula] =
-    (next ~ (op *> next).rep0).map { case (h, t) => t.foldLeft(h)(cons) }
-
-  private def rightAssocF(op: P[Unit], next: P[Formula], cons: (Formula, Formula) => Formula): P[Formula] =
-    next.flatMap(h => (op *> P.defer(rightAssocF(op, next, cons))).? map {
-      case Some(t) => cons(h, t)
-      case None    => h
-    })
-
-  private lazy val unary: P[Formula] = P.defer {
-    val stateProp: P[Formula] = pdlQNameParser.map(StateProp.apply)
-    val condProp: P[Formula]  = pdlConditionParser.between(sym("["), sym("]")).map(CondProp.apply)
-    val prop = condProp | stateProp 
-    val parens: P[Formula] = formula.between(sym("("), sym(")"))
-    val notP: P[Formula]   = (sym("~") | sym("¬")) *> unary.map(Not.apply)
-
-    val boxPure: P[Formula] = P.string("[]").surroundedBy(sps) *> unary.map(Box.apply)
-    val diaPure: P[Formula] = P.string("<>").surroundedBy(sps) *> unary.map(Diamond.apply)
-
-    val boxProg: P[Formula] =
-      (P.char('[') *> PdlProgram <* P.char(']')) ~ unary map { case (pg, f) => BoxP(pg, f) }
-
-    val diaProg: P[Formula] =
-      (P.char('<') *> PdlProgram <* P.char('>')) ~ unary map { case (pg, f) => DiamondP(pg, f) }
-
-    notP | boxPure | diaPure | boxProg.backtrack | diaProg.backtrack | parens | prop
+    left
   }
 
-  private lazy val conjP: P[Formula] = leftAssocF(sym("&|&") | sym("∧"), unary, PipeAnd.apply)
-  private lazy val conj: P[Formula] = leftAssocF(sym("&&") | sym("∧"), conjP, And.apply)
-  private lazy val disj: P[Formula] = leftAssocF(sym("||"), conj, Or.apply)
-  private lazy val impl: P[Formula] = rightAssocF(sym("=>") | sym("->"), disj, Impl.apply)
-  private lazy val iff:  P[Formula] = rightAssocF(sym("<->"), impl, Iff.apply)
+  private def parseImpl(reader: TokenReader): Formula = {
+    var left = parseOr(reader)
+    if (reader.current == "->" || reader.current == "=>") {
+      reader.consume()
+      val right = parseImpl(reader) 
+      left = Impl(left, right)
+    }
+    left
+  }
 
-  val formula: P[Formula] = sps.with1 *> iff
+  private def parseOr(reader: TokenReader): Formula = {
+    var left = parseAnd(reader)
+    while (reader.current == "||" || reader.current == "OR") {
+      reader.consume()
+      val right = parseAnd(reader)
+      left = Or(left, right)
+    }
+    left
+  }
 
-  def parseFormula(str: String): Either[String, Formula] =
-    formula.parseAll(str).left.map(_.toString)
+  private def parseAnd(reader: TokenReader): Formula = {
+    var left = parsePipeAnd(reader)
+    while (reader.current == "&&" || reader.current == "AND") {
+      reader.consume()
+      val right = parsePipeAnd(reader)
+      left = And(left, right)
+    }
+    left
+  }
+
+  private def parsePipeAnd(reader: TokenReader): Formula = {
+    var left = parseUnary(reader)
+    while (reader.current == "&|&") {
+      reader.consume()
+      val right = parseUnary(reader)
+      left = PipeAnd(left, right)
+    }
+    left
+  }
+
+  private def parseUnary(reader: TokenReader): Formula = {
+    val t = reader.current
+    if (t == "!" || t == "~" || t == "¬") {
+      reader.consume()
+      Not(parseUnary(reader))
+    } else if (t == "[]") {
+      reader.consume()
+      Box(parseUnary(reader))
+    } else if (t == "<>") {
+      reader.consume()
+      Diamond(parseUnary(reader))
+    } else if (t == "[") {
+      val savePos = reader.pos
+      try {
+          reader.consume() // [
+          val cond = parseCondition(reader)
+          reader.expect("]")
+          CondProp(cond)
+      } catch {
+          case _: Throwable =>
+              reader.pos = savePos
+              reader.consume() // [
+              val prog = parseProgram(reader)
+              reader.expect("]")
+              val f = parseUnary(reader)
+              BoxP(prog, f)
+      }
+    } else if (t == "<") {
+      reader.consume()
+      val prog = parseProgram(reader)
+      reader.expect(">")
+      val f = parseUnary(reader)
+      DiamondP(prog, f)
+    } else {
+      parseAtom(reader)
+    }
+  }
+
+  private def parseAtom(reader: TokenReader): Formula = {
+    if (reader.eat("(")) {
+      val f = parseFormula(reader)
+      reader.expect(")")
+      f
+    } else {
+      StateProp(parseQName(reader))
+    }
+  }
+
+  
+  private def parseProgram(reader: TokenReader): PdlProgram = parseChoice(reader)
+
+  private def parseChoice(reader: TokenReader): PdlProgram = {
+    var left = parseSeq(reader)
+    while (reader.eat("+")) {
+      val right = parseSeq(reader)
+      left = Choice(left, right)
+    }
+    left
+  }
+
+  private def parseSeq(reader: TokenReader): PdlProgram = {
+    var left = parseStar(reader)
+    while (reader.eat(";")) {
+      val right = parseStar(reader)
+      left = Seq(left, right)
+    }
+    left
+  }
+
+  private def parseStar(reader: TokenReader): PdlProgram = {
+    var prog = parseProgAtom(reader)
+    while (reader.eat("*")) {
+      prog = Star(prog)
+    }
+    prog
+  }
+
+  private def parseProgAtom(reader: TokenReader): PdlProgram = {
+    if (reader.eat("(")) {
+      val p = parseProgram(reader)
+      reader.expect(")")
+      p
+    } else {
+      Act(parseQName(reader))
+    }
+  }
+
+  private def parseQName(reader: TokenReader): QName = {
+    val s = reader.consume()
+    if (s.contains("/")) QName(s.split('/').toList)
+    else QName(s.split('.').toList)
+  }
+
+  private def parseCondition(reader: TokenReader): Condition = {
+      val lhs = parseQName(reader)
+      val op = reader.consume()
+      
+      val validOps = Set("==", "!=", "<=", ">=", "<", ">")
+      
+      if (!validOps.contains(op)) {
+          throw new RuntimeException(s"Operador de condição inválido: $op")
+      }
+      
+      val rhsToken = reader.consume()
+      val rhs = if (rhsToken.matches("-?\\d+(\\.\\d+)?")) Left(rhsToken.toDouble) else Right(parseQNameDummy(rhsToken))
+      Condition.AtomicCond(lhs, op, rhs)
+  }
+  
+  private def parseQNameDummy(s: String): QName = {
+      if (s.contains("/")) QName(s.split('/').toList) else QName(s.split('.').toList)
+  }
 }

@@ -16,8 +16,6 @@ object MargeAPI {
   private var currentSource: String = ""
   private var history: List[RxGraph] = Nil
 
-  // --- FUNÇÃO AUXILIAR CRÍTICA ---
-  // Escapa caracteres que quebram o JSON (quebra de linha, aspas, barras)
   private def escapeJson(str: String): String = {
     if (str == null) "" else str
       .replace("\\", "\\\\")
@@ -30,13 +28,11 @@ object MargeAPI {
   @JSExport
   def getAllStepsMermaid(): String = {
     currentGraph.map { root =>
-      // Estruturas para a busca em largura (BFS)
       var visited = Set[RxGraph](root)
       var queue = List(root)
       var transitionsStr = List[String]()
       
-      // Mapa para associar cada estado (RxGraph) a um ID numérico único (0, 1, 2...)
-      // Isso é necessário porque o Mermaid prefere IDs simples
+
       var stateToId = Map[RxGraph, Int](root -> 0)
       var idCounter = 0
       
@@ -49,21 +45,19 @@ object MargeAPI {
         }
       }
 
-      val maxStates = 1000 // Limite de segurança
+      val maxStates = 1000 
 
       while(queue.nonEmpty && visited.size < maxStates) {
         val current = queue.head
         queue = queue.tail
         val sourceId = getId(current)
         
-        // Pega todas as transições possíveis a partir deste estado
         val nexts = RxSemantics.nextEdge(current)
         
         for ((edge, nextState) <- nexts) {
           val targetId = getId(nextState)
-          val label = edge._3.show // O nome da ação (lbl)
+          val label = edge._3.show 
           
-          // Adiciona a linha do Mermaid: 0 -->|"act"| 1
           transitionsStr = s"$sourceId -->|\"$label\"| $targetId" :: transitionsStr
           
           if (!visited.contains(nextState)) {
@@ -71,31 +65,14 @@ object MargeAPI {
             queue = queue :+ nextState
           }
         }
-        
-        // Opcional: Adicionar transições de Delay se houver (basta descomentar)
-        /*
-        val delays = RxSemantics.nextDelay(current)
-        for ((_, nextState) <- delays) {
-           val targetId = getId(nextState)
-           transitionsStr = s"$sourceId -.->|\"delay\"| $targetId" :: transitionsStr
-           if (!visited.contains(nextState)) {
-             visited += nextState
-             queue = queue :+ nextState
-           }
-        }
-        */
       }
-
-      // Gera as definições dos nós com os rótulos bonitos (ex: "s0,s1")
-      // Igual ao seu código original: x => x.inits.mkString(",")
+       
       val nodeDefinitions = stateToId.map { case (state, id) =>
         val label = state.inits.mkString(", ")
-        // Se for o estado inicial (root), pinta de verde
         val style = if (state == root) "style " + id + " fill:#9ece6a,stroke:#333,stroke-width:2px" else ""
         s"$id(\"$label\")\n$style"
       }.mkString("\n")
 
-      // Monta o gráfico final
       s"""graph LR
          |${transitionsStr.reverse.mkString("\n")}
          |$nodeDefinitions
@@ -114,7 +91,6 @@ object MargeAPI {
       generateSimulationJson(graph, None)
     } catch {
       case e: Throwable =>
-        // CORREÇÃO AQUI: Usamos escapeJson para garantir que o erro não quebre o JS
         s"""{"error": "${escapeJson("Erro ao fazer o parse: " + e.getMessage)}"}"""
     }
   }
@@ -184,7 +160,6 @@ object MargeAPI {
     }
   }
 
-  // --- Exportadores e Ferramentas ---
 
   @JSExport
   def getMcrl2(): String = currentGraph.map(g => MCRL2(g)).getOrElse("Modelo vazio")
@@ -245,17 +220,24 @@ object MargeAPI {
       case Some(rx) =>
         try {
           val adaptedState = stateStr.replace('/', '.')
-          Parser2.pp(Parser2.qname, adaptedState) match {
-            case Left(err) => s"Erro ao ler estado: $err"
+          Parser2.pp[QName](Parser2.qname, adaptedState) match {
+            case Left(err) => s"Error parsing state '$stateStr': $err"
             case Right(startState) =>
-              val formula = PdlParser.parsePdlFormula(formulaStr)
-              val result = PdlEvaluator.evaluateFormula(startState, formula, rx)
-              s"Resultado: $result"
+              if (!rx.states.contains(startState)) {
+                 s"State '${startState.show}' not found in the current model."
+              } else {
+                 val formula = PdlParser.parsePdlFormula(formulaStr)
+                 println(formula)
+                 val result = PdlEvaluator.evaluateFormula(startState, formula, rx)
+                 s"Result: $result"
+              }
           }
         } catch {
-          case e: Throwable => s"Erro na avaliação: ${e.getMessage}"
+          case e: Throwable => 
+            val msg = if (e.getMessage != null) e.getMessage else e.toString
+            s"Evaluation Error: $msg"
         }
-      case None => "Modelo vazio"
+      case None => "Model not loaded."
     }
   }
 
@@ -438,7 +420,6 @@ object MargeAPI {
     "{" + examples.map{ case (k,v) => s""""$k": ${js.JSON.stringify(v)}""" }.mkString(",") + "}"
   }
 
-  // --- Views Export ---
   @JSExport
   def getCurrentStateText(): String = currentGraph.map(_.toString).getOrElse("")
 
@@ -449,7 +430,6 @@ object MargeAPI {
   def getCurrentStateMermaidSimple(): String = currentGraph.map(g => RxGraph.toMermaidPlain(g)).getOrElse("")
 
 
-  // --- Helpers ---
   private def stringToQName(str: String): QName = if (str.isEmpty) QName(Nil) else QName(str.split('/').toList)
   
   private def generateSimulationJson(graph: RxGraph, traversedEdge: Option[Edge]): String = {

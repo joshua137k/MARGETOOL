@@ -95,7 +95,8 @@ function renderCytoscapeGraph(mainContainerId, dataOrJson, isFirstRender) {
     if (!mainContainer) return;
 
     var data = (typeof dataOrJson === 'string') ? JSON.parse(dataOrJson) : dataOrJson;
-
+    var sourceCode = (typeof editor !== 'undefined') ? editor.getValue() : "";
+    applySavedPositions(data.graphElements, sourceCode);
     if (isFirstRender || !currentCytoscapeInstance) {
         setupInitialCytoscape(mainContainerId, data);
         return;
@@ -153,32 +154,54 @@ async function setupInitialCytoscape(mainContainerId, data) {
     var mainContainer = document.getElementById(mainContainerId);
     
     mainContainer.innerHTML = '';
-    
     mainContainer.style.display = 'block'; 
     mainContainer.style.width = '100%';
     mainContainer.style.height = '100%';
 
-    const graphId = generateGraphId(data.graphElements);
+    var sourceCode = (typeof editor !== 'undefined') ? editor.getValue() : JSON.stringify(data.graphElements);
     
+    const simpleHash = s => {
+        let h = 0; 
+        for(let i=0; i<s.length; i++) h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+        return String(h);
+    };
+    const graphId = simpleHash(sourceCode);
+
     if (!hasExistingLayoutsInLocalStorage()) {
         await loadDefaultLayoutsFromSeedFile();
     }
 
 
-    let layoutName = 'dagre'; 
+    var hasSavedLayout = applySavedPositions(data.graphElements, sourceCode);
 
+
+    let layoutOptions = { 
+        name: hasSavedLayout ? 'preset' : 'dagre', 
+        rankDir: 'LR', 
+        fit: true, 
+        padding: 50, 
+        spacingFactor: 1.2,
+        animate: false 
+    };
 
     var cy = cytoscape({
         container: mainContainer, 
-        elements: data.graphElements,
+        elements: data.graphElements, 
         style: getCytoscapeStyles(), 
-        layout: { name: layoutName, rankDir: 'LR', fit: true, padding: 50, spacingFactor: 1.2 },
-        wheelSensitivity: 0.2
+        layout: layoutOptions,
+        wheelSensitivity: 0.2,
+        textureOnViewport: true,
+        pixelRatio: 1
     });
 
-    loadLayoutFromLocalStorage(cy, graphId);
-
-    cy.on('dragfree', 'node', function() { autoSaveLayoutToLocalStorage(cy, graphId); });
+    
+    let saveTimeout;
+    cy.on('dragfree', 'node', function() { 
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            autoSaveLayoutToLocalStorage(cy, graphId);
+        }, 500);
+    });
     
     cy.on('tap', 'node.event-node.enabled', function(evt){
         var node = evt.target;
@@ -190,6 +213,7 @@ async function setupInitialCytoscape(mainContainerId, data) {
             var responseJson = Marge.takeStep(edgeJson);
             var newStateText = Marge.getCurrentStateText();
             jsTextHistory.push({ label: lbl + " ->", text: newStateText });
+
             updateAllViews(responseJson);
         }
     });
@@ -199,26 +223,19 @@ async function setupInitialCytoscape(mainContainerId, data) {
     
     cy.on('tap', 'edge.has-details', function(evt){
         var edge = evt.target;
-        
         var rawText = edge.data('full_label');
-        
         var formattedText = formatCode(rawText);
-        
         var contentPre = document.getElementById('edgeDetailContent');
-        
         contentPre.textContent = formattedText;
         
         if (typeof Prism !== 'undefined') {
             contentPre.className = "language-clike"; 
             Prism.highlightElement(contentPre);
         }
-        
         $('#edgeDetailModal').modal('show');
     });
 
     currentCytoscapeInstance = cy;
-    
- 
 }
 
 
@@ -643,13 +660,34 @@ function toggleAutoDelay(isChecked) {
     }
 }
 
-function generateGraphId(graphElements) {
-    const s = JSON.stringify(graphElements); 
-    let h = 0; if (s.length === 0) return '0';
-    for (let i = 0; i < s.length; i++) {
-        h = ((h << 5) - h) + s.charCodeAt(i); h = h & h; 
-    }
-    return String(h);
+
+function applySavedPositions(graphElements, sourceCode) {
+    const simpleHash = s => {
+        let h = 0; for(let i=0; i<s.length; i++) h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+        return String(h);
+    };
+    const graphId = simpleHash(sourceCode);
+    
+    try {
+        var savedJson = localStorage.getItem(`cyLayout_${graphId}`);
+        if (savedJson) {
+            var savedPositions = JSON.parse(savedJson);
+            var positionsFound = false;
+
+            graphElements.forEach(el => {
+                if (el.classes && el.classes.includes('compound-parent')) {
+                    return; 
+                }
+
+                if (el.data && el.data.id && savedPositions[el.data.id]) {
+                    el.position = savedPositions[el.data.id];
+                    positionsFound = true;
+                }
+            });
+            return positionsFound;
+        }
+    } catch(e) { console.warn("Erro ao ler posições."); }
+    return false;
 }
 
 function hasExistingLayoutsInLocalStorage() {
@@ -674,7 +712,13 @@ async function loadDefaultLayoutsFromSeedFile() {
 function autoSaveLayoutToLocalStorage(cy, graphId) {
     if (!cy || !graphId) return;
     const p = {};
-    cy.nodes().forEach(n => p[n.id()] = n.position());
+    cy.nodes().forEach(node => {
+        if (node.isParent()) return;
+
+        if (node.position()) {
+            positions[node.id()] = node.position();
+        }
+    });
     localStorage.setItem(`cyLayout_${graphId}`, JSON.stringify(p));
 }
 

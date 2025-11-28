@@ -1,276 +1,240 @@
 package marge.syntax
 
-import cats.parse.Parser.*
-import cats.parse.{LocationMap, Parser as P, Parser0 as P0}
-import cats.parse.Rfc5234.{alpha, digit, sp}
-import marge.syntax.Program2.{RxGraph,QName}
+import marge.syntax.Program2.{RxGraph, QName}
 import marge.syntax.{Condition, CounterUpdate, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
 import marge.syntax.Condition.*
-import scala.sys.error
+import scala.util.matching.Regex
 
-object Parser2 :
+object Parser2 {
 
-  def parseProgram(str:String):RxGraph =
-    val processedStr = str.linesIterator
-      .map { line =>
-        val trimmedLine = line.trim
-        if (trimmedLine.isEmpty ||
-            trimmedLine.contains("{") ||
-            trimmedLine.endsWith(";") 
-        ) {
-          line
-        } else {
-          line + ";"
-        }
-      }
-      .mkString("\n")
 
-    //println("--- Parser Input ---\n" + processedStr + "\n--------------------")
-    pp(program,processedStr) match
-      case Left(e) => error(e)
-      case Right(c) => c
+  private def tokenize(input: String): List[String] = {
+    val pattern = """(//.*)|(->>|--!|--x|-->|---->|--#--)|(\b(?:AND|OR|if|then|else|disabled|init|aut|int|clock|inv)\b)|(:=|==|!=|<=|>=|&&|\|\||[{}();,:=\+\-\*\/<>])|([a-zA-Z_][\w\.]*'?)|(-?\d+(\.\d+)?)""".r
 
-  def pp[A](parser:P[A], str:String): Either[String,A] =
-    parser.parseAll(str) match
-      case Left(e) => Left(prettyError(str,e))
-      case Right(x) => Right(x)
-
-  private def prettyError(str:String, err:Error): String =
-    val loc = LocationMap(str)
-    val pos = loc.toLineCol(err.failedAtOffset) match
-      case Some((x,y)) =>
-        s"""at ($x,$y):
-           |"${loc.getLine(x).getOrElse("-")}"
-           |${("-" * (y+1))+"^\n"}""".stripMargin
-      case _ => ""
-    s"${pos}expected: ${err.expected.toList.mkString(", ")}\noffsets: ${
-      err.failedAtOffset};${err.offsets.toList.mkString(",")}"
-
-  private val whitespace: P[Unit] = P.charIn(" \t\r\n").void
-  private val comment: P[Unit] = P.string("//") *> P.charWhere(_!='\n').rep0.void
-  private val sps: P0[Unit] = (whitespace | comment).rep0.void
-
-  def getSps: P0[Unit] = sps
-
-  def alphaDigit: P[Char] =
-    P.charIn('A' to 'Z') | P.charIn('a' to 'z') | P.charIn('0' to '9') | P.charIn('_')
-  private def Digit: P[Char] =
-    P.charIn('0' to '9')
-  def varName: P[String] =
-    (P.charIn('a' to 'z') ~ alphaDigit.rep0).string
-  def procName: P[String] =
-    (P.charIn('A' to 'Z') ~ alphaDigit.rep0).string
-  private def symbols: P[String] =
-    P.not(P.string("--")).with1 *>
-      P.oneOf("+-><!%/*=|&".toList.map(P.char)).rep.string
-
-  import scala.language.postfixOps
-
-  def qname: P[QName] =
-    alphaDigit.rep.string.repSep(P.char('.'))
-      .map(l => QName(l.toList))
-
-  def program: P[RxGraph] =
-    sps.with1 *> statements <* sps
-
-  private val sep: P[Unit] = P.char(';').surroundedBy(sps)
-
-  def statements: P[RxGraph] = P.recursive(rx =>
-    (statement(rx).repSep(sep) <* sep.?)
-      .map(res => res.toList.fold(RxGraph())(_ ++ _))
-  )
-
-  def statement(rx:P[RxGraph]): P[RxGraph] =
-    init | aut(rx) | intDeclaration | clockDeclaration  | invariantDeclaration | edge
-  
-  def invariantDeclaration: P[RxGraph] =
-  (P.string("inv") *> sps *> qname ~ (P.char(':').surroundedBy(sps) *> conditionExpr))
-    .map { case (stateName, condition) =>
-      RxGraph().addInvariant(stateName, condition)
-    }
-
-  def init: P[RxGraph] =
-    (P.string("init") *> sps *> qname)
-      .map(RxGraph().addInit(_))
-
-  def aut(rx:P[RxGraph]): P[RxGraph] =
-    ((P.string("aut") *> sps *> qname) ~
-      (sps *> P.char('{') *> sps *> (rx <* sps <* P.char('}')))
-    ).map(x => x._1 / x._2)
-
-  def integer: P[Int] = P.charIn('0' to '9').rep(1).string.map(_.toInt)
-  def intDeclaration: P[RxGraph] =
-    (P.string("int") *> sps *> qname ~
-      (sps *> P.char('=') *> sps *> integer)
-    ).flatMap {
-      case (name, value) => P.pure(RxGraph().addVariable(name, value))
-    }
-  
-  def clockDeclaration: P[RxGraph] =
-  (P.string("clock") *> sps *> qname.repSep(P.char(',').surroundedBy(sps)))
-    .map { names =>
-      names.toList.foldLeft(RxGraph()) { (acc, name) =>
-        acc.addClock(name)
-      }
-    }
-
-  def comparisonOp: P[String] = (
-    P.string(">=").as(">=") |
-    P.string("<=").as("<=") |
-    P.string("==").as("==") |
-    P.string("!=").as("!=") |
-    P.string(">").as(">") |
-    P.string("<").as("<")
-  ).surroundedBy(sps)
-
-  def intOrQName: P[Either[Int, QName]] =
-    integer.map(Left(_)) | qname.map(Right(_))
-
-  def double: P[Double] = {
-    val unsignedPart = digit.rep(1) ~ (P.char('.') *> digit.rep(1)).?
-    val signedPart = P.char('-') *> unsignedPart
-    (signedPart | unsignedPart).string.map(_.toDouble)
+    pattern.findAllMatchIn(input).flatMap { m =>
+      if (m.group(1) != null) None 
+      else Some(m.matched)         
+    }.toList
   }
 
 
-  def numberOrQName: P[Either[Double, QName]] =
-    double.map(Left(_)) | qname.map(Right(_))
-
-  private lazy val conditionTerm: P[Condition] = P.defer {
-    val atomic: P[Condition] =
-      (qname.surroundedBy(sps) ~ comparisonOp ~ numberOrQName.surroundedBy(sps))
-        .map { case ((left, op), right) => AtomicCond(left, op, right) }
-
-    val parens: P[Condition] =
-      conditionExpr.between(P.char('(').surroundedBy(sps), P.char(')').surroundedBy(sps))
-
-    (atomic.backtrack | parens).surroundedBy(sps)
-  }
-
-  private val andOp = P.string("AND").surroundedBy(sps)
-  private val orOp = P.string("OR").surroundedBy(sps)
-
-  private lazy val andCondition: P[Condition] =
-    (conditionTerm ~ (andOp *> conditionTerm).rep0).map {
-      case (head, tail) => tail.foldLeft(head)(And.apply)
-    }
-
-  private lazy val orCondition: P[Condition] =
-    (andCondition ~ (orOp *> andCondition).rep0).map {
-      case (head, tail) => tail.foldLeft(head)(Or.apply)
-    }
-      
-  def conditionExpr: P[Condition] = orCondition
-
-  def condition: P[Condition] =
-    P.string("if") *> sps *> conditionExpr
-
-  def updateExpr: P[UpdateExpr] = {
-    val litParser: P[UpdateExpr] = integer.map(UpdateExpr.Lit.apply)
-    val varParser: P[UpdateExpr] = qname.map(UpdateExpr.Var.apply)
-
-    val addSubParser: P[UpdateExpr] = (
-      qname ~ (sps *> (P.char('+').as("+") | P.char('-').as("-"))) ~ (sps *> intOrQName)
-      ).map {
-      case ((v, "+"), e) => UpdateExpr.Add(v, e)
-      case ((v, "-"), e) => UpdateExpr.Sub(v, e)
-      case _ => throw new IllegalStateException("Erro de lógica do parser: operador inesperado em addSubParser.")
-    }
-    addSubParser.backtrack | litParser.backtrack | varParser
-  }
-
-  def counterUpdate: P[CounterUpdate] = {
-    (qname <* P.char('\'').surroundedBy(sps) <* P.string(":=").surroundedBy(sps)) ~ updateExpr
-  }.map { case (lhs, expr) => CounterUpdate(lhs, expr) }
-
-  def statementParser: P[Statement] = P.recursive { self =>
-    val updateStmt = counterUpdate.flatMap { upd =>
-
-      P.pure(UpdateStmt(upd))
-    }
-    val ifThenStmt = (
-      P.string("if") *> sps *> conditionExpr ~
-      (sps *> P.string("then") *> sps *> P.char('{') *> sps *>
-        self.repSep(sep) <* sep.? <* sps <* P.char('}'))
-    ).map { case (cond, stmts) => IfThenStmt(cond, stmts.toList) }
+  private class TokenReader(tokens: List[String]) {
+    var pos = 0
     
-    ifThenStmt.backtrack | updateStmt
+    def current: String = if (pos < tokens.length) tokens(pos) else ""
+    def hasNext: Boolean = pos < tokens.length
+    
+    def consume(): String = {
+      val t = current
+      pos += 1
+      t
+    }
+    
+    def eat(s: String): Boolean = {
+      if (current == s) {
+        pos += 1
+        true
+      } else false
+    }
+    
+    def expect(s: String): Unit = {
+      if (!eat(s)) throw new RuntimeException(s"Erro de Sintaxe: Esperado '$s', encontrado '$current'")
+    }
+
+    def parseQName(): QName = {
+      val s = consume()
+      if (s.contains(".")) QName(s.split('.').toList) else QName(List(s))
+    }
+    
+    def tryParseInt(): Int = consume().toInt
+    def tryParseDouble(): Double = consume().toDouble
   }
 
-  def guardBlock: P[(Option[Condition], List[Statement])] =
-    (P.string("if") *> sps *> conditionExpr ~
-      (sps *> P.string("then") *> sps *> P.char('{') *> sps *>
-        (statementParser.repSep(sep) <* sep.?) <* sps <* P.char('}'))
-    ).map { case (cond, stmts) => (Some(cond), stmts.toList) }
 
-  def inlineGuard: P[(Option[Condition], List[Statement])] = {
-    val condThenMaybeUpdate = (condition ~ (sps *> counterUpdate).?).map {
-      case (cond, updOpt) => (Some(cond), updOpt.map(u => UpdateStmt(u)).toList)
-    }
-    val justUpdate = counterUpdate.map { upd =>
-      (None, List(UpdateStmt(upd)))
-    }
-    condThenMaybeUpdate.backtrack | justUpdate
+  def parseProgram(str: String): RxGraph = {
+    val tokens = tokenize(str)
+    val reader = new TokenReader(tokens)
+    parseBlock(reader)
   }
 
-  private sealed trait EdgeAttribute
-  private case class Label(name: QName) extends EdgeAttribute
-  private case class Guard(cond: Option[Condition], updates: List[Statement]) extends EdgeAttribute
-  private case object Disabled extends EdgeAttribute
-
-
-  def edge: P[RxGraph] = {
-    val keywords = Set("init", "aut", "int")
-
-    val labelAttr: P[EdgeAttribute] = (P.char(':') *> sps *> qname).map(Label.apply)
-    val guardAttr: P[EdgeAttribute] = (guardBlock.backtrack | inlineGuard).map { case (c, u) => Guard(c, u) }
-    val disabledAttr: P[EdgeAttribute] = P.string("disabled").as(Disabled)
-
-    val attribute: P[EdgeAttribute] = sps.with1 *> (labelAttr | disabledAttr| guardAttr  )
-    val attributesParser: P0[List[EdgeAttribute]] = attribute.rep0
-
-    type ArrowFunc = (QName, QName, QName, Option[Condition], List[Statement]) => RxGraph
-
-    val coreEdgeParser: P[(QName, ArrowFunc, QName)] =
-      qname.flatMap { n1 =>
-        if (keywords.contains(n1.toString)) {
-          P.fail
-        } else {
-          (arrow.surroundedBy(sps) ~ qname).map { case (arFunc, n2) =>
-            (n1, arFunc, n2)
-          }
+  private def parseBlock(reader: TokenReader): RxGraph = {
+    var rx = RxGraph()
+    
+    while (reader.hasNext && reader.current != "}") {
+      val token = reader.current
+      
+      if (reader.eat("init")) {
+        rx = rx.addInit(reader.parseQName())
+      }
+      else if (reader.eat("int")) {
+        val name = reader.parseQName()
+        reader.expect("=")
+        val value = reader.tryParseInt()
+        rx = rx.addVariable(name, value)
+      }
+      else if (reader.eat("clock")) {
+        rx = rx.addClock(reader.parseQName())
+        while (reader.eat(",")) {
+          rx = rx.addClock(reader.parseQName())
         }
       }
-
-    (coreEdgeParser ~ attributesParser).map { case ((n1, arFunc, n2), attrs) =>
-      val (lbl, guardCond, guardUpd, isDisabled) = attrs.foldLeft((QName(Nil), None: Option[Condition], Nil: List[Statement], false)) {
-        case ((_, c, u, d), Label(name)) => (name, c, u, d)
-        case ((l, _, _, d), Guard(cond, updates)) => (l, cond, updates, d)
-        case ((l, c, u, _), Disabled) => (l, c, u, true)
+      else if (reader.eat("inv")) {
+        val state = reader.parseQName()
+        reader.expect(":")
+        val cond = parseCondition(reader)
+        rx = rx.addInvariant(state, cond)
+      }
+      else if (reader.eat("aut")) {
+        val name = reader.parseQName()
+        reader.expect("{")
+        val innerRx = parseBlock(reader)
+        reader.expect("}")
+        rx = rx ++ (name / innerRx)
+      }
+      else if (token == ";") {
+        reader.consume() 
+      }
+      else {
+        rx = parseEdge(reader, rx)
       }
       
-      val base = arFunc(n1, n2, lbl, guardCond, guardUpd)
-      if (isDisabled) base.deactivate(n1, n2, lbl) else base
+      reader.eat(";") 
     }
+    rx
   }
 
+  private def parseEdge(reader: TokenReader, rx: RxGraph): RxGraph = {
+    val from = reader.parseQName()
+    val arrow = reader.consume()
+    val to = reader.parseQName()
+    
+    var label = QName(Nil)
+    if (reader.eat(":")) {
+      label = reader.parseQName()
+    }
 
-  def arrow: P[(QName,QName,QName, Option[Condition], List[Statement])=>RxGraph] =
-    P.string("-->").as(RxGraph().addEdge) |
-    P.string("->>").as(RxGraph().addOn) |
-    P.string("--!").as(RxGraph().addOff) |
-    P.string("--x").as(RxGraph().addOff) |
-    P.string("--#--").as((a:QName,b:QName,c:QName, cond: Option[Condition], upd: List[Statement]) => RxGraph()
-      .addOff(a,b,c, cond, upd).addOff(b,a,c, cond, upd)) |
-    P.string("---->").as((a:QName,b:QName,c:QName, cond: Option[Condition], upd: List[Statement]) => RxGraph()
-      .addOn(a,b,c, cond, upd).addOff(b,b,c, cond, upd))
+    var cond: Option[Condition] = None
+    var updates: List[Statement] = Nil
+    var disabled = false
 
-  object Examples:
-    val ex1 =
-      """
-        init = s0;
-        l0={(s0,s1,a,0,Bullet),(s1,s1,b,0,Circ)};
+    var parsingAttributes = true
+    while (parsingAttributes && reader.hasNext) {
+       val t = reader.current
+       
+       if (t == "disabled") {
+         reader.consume()
+         disabled = true
+       } 
+       else if (t == "if") {
+         reader.consume()
+         cond = Some(parseCondition(reader))
+         if (reader.eat("then")) {
+            reader.expect("{")
+            updates = parseStatementsBlock(reader)
+            reader.expect("}")
+         }
+       } 
+       else if (t.endsWith("'")) {
+           updates = updates :+ parseUpdate(reader)
+       } 
+       else {
+           parsingAttributes = false
+       }
+    }
 
-        ln = {((s1,s1,b,0,Circ), (s1,s1,b,0,Circ),0,Bullet,ON),((s1,s1,b,0,Circ), (s2,s1,b,0,Circ),0,Bullet,ON),((s1,s1,b,0,Circ),((s1,s1,b,0,Circ),(s1,s1,b,0,Circ),0,Bullet,ON),0,Circ,OFF)}
+    val newRx = arrow match {
+      case "-->" => rx.addEdge(from, to, label, cond, updates)
+      case "->>" => rx.addOn(from, to, label, cond, updates)
+      case "--!" | "--x" => rx.addOff(from, to, label, cond, updates)
+      case "---->" => rx.addOn(from, to, label, cond, updates).addOff(to, to, label, cond, updates)
+      case "--#--" => rx.addOff(from, to, label, cond, updates).addOff(to, from, label, cond, updates)
+      case _ => throw new RuntimeException(s"Seta desconhecida: $arrow")
+    }
 
-      """
+    if (disabled) newRx.deactivate(from, to, label) else newRx
+  }
+
+  private def parseCondition(reader: TokenReader): Condition = {
+    def parseAtom(): Condition = {
+      if (reader.eat("(")) {
+        val c = parseCondition(reader)
+        reader.expect(")")
+        c
+      } else {
+        val lhs = reader.parseQName()
+        val op = reader.consume()
+        val rhsToken = reader.current
+        val rhs = if (rhsToken.matches("-?\\d+(\\.\\d+)?")) {
+             Left(reader.tryParseDouble())
+        } else {
+             Right(reader.parseQName())
+        }
+        AtomicCond(lhs, op, rhs)
+      }
+    }
+
+    var left = parseAtom()
+    while (reader.current == "AND" || reader.current == "&&" || reader.current == "OR" || reader.current == "||") {
+      val logicOp = reader.consume()
+      val right = parseAtom()
+      if (logicOp == "OR" || logicOp == "||") left = Or(left, right)
+      else left = And(left, right)
+    }
+    left
+  }
+
+  private def parseStatementsBlock(reader: TokenReader): List[Statement] = {
+    var stmts = List.empty[Statement]
+    while (reader.current != "}") {
+        if (reader.eat("if")) {
+            val cond = parseCondition(reader)
+            reader.expect("then")
+            reader.expect("{")
+            val inner = parseStatementsBlock(reader)
+            reader.expect("}")
+            stmts = stmts :+ IfThenStmt(cond, inner)
+        } else {
+            stmts = stmts :+ parseUpdate(reader)
+        }
+        reader.eat(";")
+    }
+    stmts
+  }
+
+  private def parseUpdate(reader: TokenReader): UpdateStmt = {
+      val vRaw = reader.parseQName()
+      if (!vRaw.n.last.endsWith("'")) throw new RuntimeException(s"Esperado var', encontrado ${vRaw.show}")
+      
+      val cleanName = QName(vRaw.n.init :+ vRaw.n.last.dropRight(1))
+      
+      reader.expect(":=")
+      
+      val firstToken = reader.consume()
+      val expr = if (firstToken.matches("-?\\d+")) UpdateExpr.Lit(firstToken.toInt) else UpdateExpr.Var(stringToQName(firstToken))
+      
+      if (reader.current == "+" || reader.current == "-") {
+          val op = reader.consume()
+          val secondToken = reader.consume()
+          val rhs = if (secondToken.matches("\\d+")) Left(secondToken.toInt) else Right(stringToQName(secondToken))
+          
+          val varFromExpr = expr match {
+              case UpdateExpr.Var(q) => q
+              case _ => throw new RuntimeException("Expressão complexa não suportada no parser simples")
+          }
+          
+          if (op == "+") UpdateStmt(CounterUpdate(cleanName, UpdateExpr.Add(varFromExpr, rhs)))
+          else UpdateStmt(CounterUpdate(cleanName, UpdateExpr.Sub(varFromExpr, rhs)))
+      } else {
+          UpdateStmt(CounterUpdate(cleanName, expr))
+      }
+  }
+
+  private def stringToQName(s: String): QName = {
+      if (s.contains(".")) QName(s.split('.').toList) else QName(List(s))
+  }
+
+  def pp[A](parser: Any, str: String): Either[String, A] = {
+      try { Right(stringToQName(str).asInstanceOf[A]) } catch { case e: Throwable => Left(e.getMessage) }
+  }
+  def qname: Any = null
+}
