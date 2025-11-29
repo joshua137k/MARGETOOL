@@ -5,7 +5,6 @@ import marge.syntax.Program2.EdgeMap
 import marge.syntax.{Condition, CounterUpdate, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
 import scala.annotation.tailrec
 import scala.language.implicitConversions
-import scala.scalajs.js.Dynamic.global
 object Program2:
 
   type Rel[A,B] = Map[A,Set[B]]
@@ -210,7 +209,7 @@ object Program2:
     def toMermaid(rx: RxGraph): String =
       var i = -1
       def fresh(): Int = {i += 1; i}
-      global.console.log(s"flowchart LR\n${
+      println(s"flowchart LR\n${
         drawEdges(rx.edg, rx, fresh, ">", "stroke:black, stroke-width:2px",(x,y) => Set(x.toString), withConditions = true)}${
         drawEdges(rx.on, rx, fresh, ">", "stroke:blue, stroke-width:3px",getLabel, withConditions = true)}${
         drawEdges(rx.off,rx, fresh, "x", "stroke:red, stroke-width:3px",getLabel, withConditions = true)}${

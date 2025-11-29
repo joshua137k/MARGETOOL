@@ -416,7 +416,6 @@ object MargeAPI {
       |Dencrypt ->> Send
       |Dencrypt --! ESend""".stripMargin,
     )
-    // Retorna como JSON simples
     "{" + examples.map{ case (k,v) => s""""$k": ${js.JSON.stringify(v)}""" }.mkString(",") + "}"
   }
 

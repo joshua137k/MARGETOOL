@@ -9621,61 +9621,61 @@ $c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaidSimple__T = (functi
   var this$2 = $n($$x1);
   return $as_T((this$2.isEmpty__Z() ? "" : this$2.get__O()))
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalRG = (function() {
-  return this.getUppaalRG__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaid = (function() {
+  return this.getCurrentStateMermaid__T()
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getExamples = (function() {
-  return this.getExamples__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalGLTS = (function() {
+  return this.getUppaalGLTS__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalTGRG = (function() {
+  return this.getUppaalTGRG__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getMcrl2 = (function() {
+  return this.getMcrl2__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.advanceTime = (function(arg) {
+  var prep0 = $uD(arg);
+  return this.advanceTime__D__T(prep0)
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaidSimple = (function() {
+  return this.getCurrentStateMermaidSimple__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getAllStepsMermaid = (function() {
+  return this.getAllStepsMermaid__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getStats = (function() {
+  return this.getStats__T()
 });
 $c_Lmarge_frontend_MargeAPI$.prototype.takeStep = (function(arg) {
   var prep0 = $as_T(arg);
   return this.takeStep__T__T(prep0)
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getMcrl2 = (function() {
-  return this.getMcrl2__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateText = (function() {
+  return this.getCurrentStateText__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getExamples = (function() {
+  return this.getExamples__T()
 });
 $c_Lmarge_frontend_MargeAPI$.prototype.runPdl = (function(arg, arg$2) {
   var prep0 = $as_T(arg);
   var prep1 = $as_T(arg$2);
   return this.runPdl__T__T__T(prep0, prep1)
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalGLTS = (function() {
-  return this.getUppaalGLTS__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.checkProblems = (function() {
+  return this.checkProblems__T()
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getStats = (function() {
-  return this.getStats__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalRG = (function() {
+  return this.getUppaalRG__T()
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.undo = (function() {
-  return this.undo__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.translateToGLTS = (function() {
+  return this.translateToGLTS__T()
 });
 $c_Lmarge_frontend_MargeAPI$.prototype.loadModel = (function(arg) {
   var prep0 = $as_T(arg);
   return this.loadModel__T__T(prep0)
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaidSimple = (function() {
-  return this.getCurrentStateMermaidSimple__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaid = (function() {
-  return this.getCurrentStateMermaid__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.checkProblems = (function() {
-  return this.checkProblems__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalTGRG = (function() {
-  return this.getUppaalTGRG__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.translateToGLTS = (function() {
-  return this.translateToGLTS__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateText = (function() {
-  return this.getCurrentStateText__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getAllStepsMermaid = (function() {
-  return this.getAllStepsMermaid__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.advanceTime = (function(arg) {
-  var prep0 = $uD(arg);
-  return this.advanceTime__D__T(prep0)
+$c_Lmarge_frontend_MargeAPI$.prototype.undo = (function() {
+  return this.undo__T()
 });
 var $d_Lmarge_frontend_MargeAPI$ = new $TypeData().initClass({
   Lmarge_frontend_MargeAPI$: 0
@@ -19434,7 +19434,6 @@ $c_Lmarge_syntax_Program2$RxGraph$.prototype.apply__Lmarge_syntax_Program2$RxGra
 });
 $c_Lmarge_syntax_Program2$RxGraph$.prototype.toMermaid__Lmarge_syntax_Program2$RxGraph__T = (function(rx) {
   var i = new $c_sr_IntRef((-1));
-  var $$x5 = console;
   var $$x3 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_edg, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), ">", "stroke:black, stroke-width:2px", new $c_sjsr_AnonFunction2(((x, y) => {
     var x$1 = $as_Lmarge_syntax_Program2$QName(x);
     $as_Lmarge_syntax_Program2$RxGraph(y);
@@ -19459,35 +19458,37 @@ $c_Lmarge_syntax_Program2$RxGraph$.prototype.toMermaid__Lmarge_syntax_Program2$R
     var s$1 = $as_Lmarge_syntax_Program2$QName(s);
     return (("  style " + s$1) + " fill:#8f7,stroke:#363,stroke-width:4px\n")
   })))));
-  var s$2 = (((("flowchart LR\n" + $$x3) + $$x2) + $$x1) + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$8, "", "", ""));
-  $$x5.log(s$2);
+  var x$2 = (((("flowchart LR\n" + $$x3) + $$x2) + $$x1) + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$8, "", "", ""));
+  var this$10 = $m_s_Console$();
+  var this$11 = $n(this$10.out__Ljava_io_PrintStream());
+  this$11.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$2 + "\n"));
   var ev$24 = (-1);
   i.sr_IntRef__f_elem = ev$24;
-  var $$x8 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_edg, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), ">", "stroke:black, stroke-width:2px", new $c_sjsr_AnonFunction2(((x$2, y$2) => {
-    var x$3 = $as_Lmarge_syntax_Program2$QName(x$2);
+  var $$x7 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_edg, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), ">", "stroke:black, stroke-width:2px", new $c_sjsr_AnonFunction2(((x$2$1, y$2) => {
+    var x$3 = $as_Lmarge_syntax_Program2$QName(x$2$1);
     $as_Lmarge_syntax_Program2$RxGraph(y$2);
-    var this$12 = $n($m_s_Predef$().s_Predef$__f_Set);
-    var $$x9 = $m_sr_ScalaRunTime$();
-    var this$10 = $n(x$3);
-    var this$11 = $n(this$10.Lmarge_syntax_Program2$QName__f_n);
-    var elems$1 = $n($$x9).wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)([$f_sc_IterableOnceOps__mkString__T__T__T__T(this$11, "", "/", "")]));
-    return this$12.from__sc_IterableOnce__sci_Set(elems$1)
+    var this$14 = $n($m_s_Predef$().s_Predef$__f_Set);
+    var $$x8 = $m_sr_ScalaRunTime$();
+    var this$12 = $n(x$3);
+    var this$13 = $n(this$12.Lmarge_syntax_Program2$QName__f_n);
+    var elems$1 = $n($$x8).wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)([$f_sc_IterableOnceOps__mkString__T__T__T__T(this$13, "", "/", "")]));
+    return this$14.from__sc_IterableOnce__sci_Set(elems$1)
   })), false, true);
-  var $$x7 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_on, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), ">", "stroke:blue, stroke-width:3px", new $c_sjsr_AnonFunction2(((n$3$1, rx$4$1) => {
+  var $$x6 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_on, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), ">", "stroke:blue, stroke-width:3px", new $c_sjsr_AnonFunction2(((n$3$1, rx$4$1) => {
     var n$4 = $as_Lmarge_syntax_Program2$QName(n$3$1);
     var rx$5 = $as_Lmarge_syntax_Program2$RxGraph(rx$4$1);
     return $p_Lmarge_syntax_Program2$RxGraph$__getLabel__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$RxGraph__sci_Set(this, n$4, rx$5)
   })), false, true);
-  var $$x6 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_off, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), "x", "stroke:red, stroke-width:3px", new $c_sjsr_AnonFunction2(((n$4$1, rx$5$1) => {
+  var $$x5 = $p_Lmarge_syntax_Program2$RxGraph$__drawEdges__sci_Map__Lmarge_syntax_Program2$RxGraph__F0__T__T__F2__Z__Z__T(this, $n(rx).Lmarge_syntax_Program2$RxGraph__f_off, rx, new $c_sjsr_AnonFunction0((() => $p_Lmarge_syntax_Program2$RxGraph$__fresh$5__sr_IntRef__I(this, i))), "x", "stroke:red, stroke-width:3px", new $c_sjsr_AnonFunction2(((n$4$1, rx$5$1) => {
     var n$5 = $as_Lmarge_syntax_Program2$QName(n$4$1);
     var rx$6 = $as_Lmarge_syntax_Program2$RxGraph(rx$5$1);
     return $p_Lmarge_syntax_Program2$RxGraph$__getLabel__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$RxGraph__sci_Set(this, n$5, rx$6)
   })), false, true);
-  var this$15 = $n($as_sc_IterableOnceOps($n($n(rx).Lmarge_syntax_Program2$RxGraph__f_inits).map__F1__O(new $c_sjsr_AnonFunction1(((s$2$1) => {
-    var s$3 = $as_Lmarge_syntax_Program2$QName(s$2$1);
+  var this$15 = $n($as_sc_IterableOnceOps($n($n(rx).Lmarge_syntax_Program2$RxGraph__f_inits).map__F1__O(new $c_sjsr_AnonFunction1(((s$2) => {
+    var s$3 = $as_Lmarge_syntax_Program2$QName(s$2);
     return (("  style " + s$3) + " fill:#8f7,stroke:#363,stroke-width:4px\n")
   })))));
-  return (((("flowchart LR\n" + $$x8) + $$x7) + $$x6) + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$15, "", "", ""))
+  return (((("flowchart LR\n" + $$x7) + $$x6) + $$x5) + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$15, "", "", ""))
 });
 $c_Lmarge_syntax_Program2$RxGraph$.prototype.toMermaidPlain__Lmarge_syntax_Program2$RxGraph__T = (function(rx) {
   var i = new $c_sr_IntRef((-1));
@@ -24229,9 +24230,24 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.showSimple__T = (function() {
 });
 $c_Lmarge_syntax_Program2$RxGraph.prototype.addClock__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$RxGraph = (function(name) {
   var this$1 = $n(this.Lmarge_syntax_Program2$RxGraph__f_clocks);
-  var clocks$4 = $as_sci_Set(this$1.incl__O__sci_SetOps(name));
+  var clocks$3 = $as_sci_Set(this$1.incl__O__sci_SetOps(name));
   var this$4 = $n(this.Lmarge_syntax_Program2$RxGraph__f_clock_env);
-  var clock_env$4 = $as_sci_Map(this$4.updated__O__O__sci_MapOps(name, 0.0));
+  var clock_env$3 = $as_sci_Map(this$4.updated__O__O__sci_MapOps(name, 0.0));
+  var edg$3 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
+  var on$3 = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var off$3 = this.Lmarge_syntax_Program2$RxGraph__f_off;
+  var lbls$3 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
+  var inits$3 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
+  var act$3 = this.Lmarge_syntax_Program2$RxGraph__f_act;
+  var val_env$3 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
+  var invariants$3 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
+  var edgeConditions$3 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
+  var edgeUpdates$3 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
+  return new $c_Lmarge_syntax_Program2$RxGraph(edg$3, on$3, off$3, lbls$3, inits$3, act$3, val_env$3, clocks$3, clock_env$3, invariants$3, edgeConditions$3, edgeUpdates$3)
+});
+$c_Lmarge_syntax_Program2$RxGraph.prototype.addInvariant__Lmarge_syntax_Program2$QName__Lmarge_syntax_Condition__Lmarge_syntax_Program2$RxGraph = (function(state, cond) {
+  var this$3 = $n(this.Lmarge_syntax_Program2$RxGraph__f_invariants);
+  var invariants$4 = $as_sci_Map(this$3.updated__O__O__sci_MapOps(state, cond));
   var edg$4 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
   var on$4 = this.Lmarge_syntax_Program2$RxGraph__f_on;
   var off$4 = this.Lmarge_syntax_Program2$RxGraph__f_off;
@@ -24239,26 +24255,11 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.addClock__Lmarge_syntax_Program2$QNa
   var inits$4 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
   var act$4 = this.Lmarge_syntax_Program2$RxGraph__f_act;
   var val_env$4 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
-  var invariants$4 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
+  var clocks$4 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
+  var clock_env$4 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
   var edgeConditions$4 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
   var edgeUpdates$4 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
   return new $c_Lmarge_syntax_Program2$RxGraph(edg$4, on$4, off$4, lbls$4, inits$4, act$4, val_env$4, clocks$4, clock_env$4, invariants$4, edgeConditions$4, edgeUpdates$4)
-});
-$c_Lmarge_syntax_Program2$RxGraph.prototype.addInvariant__Lmarge_syntax_Program2$QName__Lmarge_syntax_Condition__Lmarge_syntax_Program2$RxGraph = (function(state, cond) {
-  var this$3 = $n(this.Lmarge_syntax_Program2$RxGraph__f_invariants);
-  var invariants$1 = $as_sci_Map(this$3.updated__O__O__sci_MapOps(state, cond));
-  var edg$1 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
-  var on$1 = this.Lmarge_syntax_Program2$RxGraph__f_on;
-  var off$1 = this.Lmarge_syntax_Program2$RxGraph__f_off;
-  var lbls$1 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
-  var inits$1 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
-  var act$1 = this.Lmarge_syntax_Program2$RxGraph__f_act;
-  var val_env$1 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
-  var clocks$1 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
-  var clock_env$1 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
-  var edgeConditions$1 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
-  var edgeUpdates$1 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
-  return new $c_Lmarge_syntax_Program2$RxGraph(edg$1, on$1, off$1, lbls$1, inits$1, act$1, val_env$1, clocks$1, clock_env$1, invariants$1, edgeConditions$1, edgeUpdates$1)
 });
 $c_Lmarge_syntax_Program2$RxGraph.prototype.toString__T = (function() {
   var this$1 = $n(this.Lmarge_syntax_Program2$RxGraph__f_inits);
@@ -24368,7 +24369,38 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.addEdge__Lmarge_syntax_Program2$QNam
   var this$8 = $n(r);
   var this$6 = $n($as_sci_SetOps($n(r).apply__O__O(s1)));
   var y$1 = this$6.incl__O__sci_SetOps(y);
-  var edg$6 = $as_sci_Map(this$8.updated__O__O__sci_MapOps(s1, y$1));
+  var edg$5 = $as_sci_Map(this$8.updated__O__O__sci_MapOps(s1, y$1));
+  var y$2 = new $c_T3(s1, s2, l);
+  var r$1 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
+  var this$16 = $n(r$1);
+  var this$14 = $n($as_sci_SetOps($n(r$1).apply__O__O(l)));
+  var y$3 = this$14.incl__O__sci_SetOps(y$2);
+  var lbls$5 = $as_sci_Map(this$16.updated__O__O__sci_MapOps(l, y$3));
+  var this$18 = $n(this.Lmarge_syntax_Program2$RxGraph__f_act);
+  var elem = new $c_T3(s1, s2, l);
+  var act$5 = $as_sci_Set(this$18.incl__O__sci_SetOps(elem));
+  var this$22 = $n(this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions);
+  var self = new $c_T3(s1, s2, l);
+  var edgeConditions$5 = $as_sci_Map(this$22.updated__O__O__sci_MapOps(self, cond));
+  var this$26 = $n(this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates);
+  var self$1 = new $c_T3(s1, s2, l);
+  var edgeUpdates$5 = $as_sci_Map(this$26.updated__O__O__sci_MapOps(self$1, upd));
+  var on$5 = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var off$5 = this.Lmarge_syntax_Program2$RxGraph__f_off;
+  var inits$5 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
+  var val_env$5 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
+  var clocks$5 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
+  var clock_env$5 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
+  var invariants$5 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
+  return new $c_Lmarge_syntax_Program2$RxGraph(edg$5, on$5, off$5, lbls$5, inits$5, act$5, val_env$5, clocks$5, clock_env$5, invariants$5, edgeConditions$5, edgeUpdates$5)
+});
+$c_Lmarge_syntax_Program2$RxGraph.prototype.addOn__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__s_Option__sci_List__Lmarge_syntax_Program2$RxGraph = (function(s1, s2, l, cond, upd) {
+  var y = new $c_T2(s2, l);
+  var r = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var this$8 = $n(r);
+  var this$6 = $n($as_sci_SetOps($n(r).apply__O__O(s1)));
+  var y$1 = this$6.incl__O__sci_SetOps(y);
+  var on$6 = $as_sci_Map(this$8.updated__O__O__sci_MapOps(s1, y$1));
   var y$2 = new $c_T3(s1, s2, l);
   var r$1 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
   var this$16 = $n(r$1);
@@ -24384,7 +24416,7 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.addEdge__Lmarge_syntax_Program2$QNam
   var this$26 = $n(this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates);
   var self$1 = new $c_T3(s1, s2, l);
   var edgeUpdates$6 = $as_sci_Map(this$26.updated__O__O__sci_MapOps(self$1, upd));
-  var on$6 = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var edg$6 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
   var off$6 = this.Lmarge_syntax_Program2$RxGraph__f_off;
   var inits$6 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
   var val_env$6 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
@@ -24393,13 +24425,13 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.addEdge__Lmarge_syntax_Program2$QNam
   var invariants$6 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
   return new $c_Lmarge_syntax_Program2$RxGraph(edg$6, on$6, off$6, lbls$6, inits$6, act$6, val_env$6, clocks$6, clock_env$6, invariants$6, edgeConditions$6, edgeUpdates$6)
 });
-$c_Lmarge_syntax_Program2$RxGraph.prototype.addOn__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__s_Option__sci_List__Lmarge_syntax_Program2$RxGraph = (function(s1, s2, l, cond, upd) {
+$c_Lmarge_syntax_Program2$RxGraph.prototype.addOff__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__s_Option__sci_List__Lmarge_syntax_Program2$RxGraph = (function(s1, s2, l, cond, upd) {
   var y = new $c_T2(s2, l);
-  var r = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var r = this.Lmarge_syntax_Program2$RxGraph__f_off;
   var this$8 = $n(r);
   var this$6 = $n($as_sci_SetOps($n(r).apply__O__O(s1)));
   var y$1 = this$6.incl__O__sci_SetOps(y);
-  var on$7 = $as_sci_Map(this$8.updated__O__O__sci_MapOps(s1, y$1));
+  var off$7 = $as_sci_Map(this$8.updated__O__O__sci_MapOps(s1, y$1));
   var y$2 = new $c_T3(s1, s2, l);
   var r$1 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
   var this$16 = $n(r$1);
@@ -24416,7 +24448,7 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.addOn__Lmarge_syntax_Program2$QName_
   var self$1 = new $c_T3(s1, s2, l);
   var edgeUpdates$7 = $as_sci_Map(this$26.updated__O__O__sci_MapOps(self$1, upd));
   var edg$7 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
-  var off$7 = this.Lmarge_syntax_Program2$RxGraph__f_off;
+  var on$7 = this.Lmarge_syntax_Program2$RxGraph__f_on;
   var inits$7 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
   var val_env$7 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
   var clocks$7 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
@@ -24424,85 +24456,54 @@ $c_Lmarge_syntax_Program2$RxGraph.prototype.addOn__Lmarge_syntax_Program2$QName_
   var invariants$7 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
   return new $c_Lmarge_syntax_Program2$RxGraph(edg$7, on$7, off$7, lbls$7, inits$7, act$7, val_env$7, clocks$7, clock_env$7, invariants$7, edgeConditions$7, edgeUpdates$7)
 });
-$c_Lmarge_syntax_Program2$RxGraph.prototype.addOff__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__s_Option__sci_List__Lmarge_syntax_Program2$RxGraph = (function(s1, s2, l, cond, upd) {
-  var y = new $c_T2(s2, l);
-  var r = this.Lmarge_syntax_Program2$RxGraph__f_off;
-  var this$8 = $n(r);
-  var this$6 = $n($as_sci_SetOps($n(r).apply__O__O(s1)));
-  var y$1 = this$6.incl__O__sci_SetOps(y);
-  var off$8 = $as_sci_Map(this$8.updated__O__O__sci_MapOps(s1, y$1));
-  var y$2 = new $c_T3(s1, s2, l);
-  var r$1 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
-  var this$16 = $n(r$1);
-  var this$14 = $n($as_sci_SetOps($n(r$1).apply__O__O(l)));
-  var y$3 = this$14.incl__O__sci_SetOps(y$2);
-  var lbls$8 = $as_sci_Map(this$16.updated__O__O__sci_MapOps(l, y$3));
-  var this$18 = $n(this.Lmarge_syntax_Program2$RxGraph__f_act);
-  var elem = new $c_T3(s1, s2, l);
-  var act$8 = $as_sci_Set(this$18.incl__O__sci_SetOps(elem));
-  var this$22 = $n(this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions);
-  var self = new $c_T3(s1, s2, l);
-  var edgeConditions$8 = $as_sci_Map(this$22.updated__O__O__sci_MapOps(self, cond));
-  var this$26 = $n(this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates);
-  var self$1 = new $c_T3(s1, s2, l);
-  var edgeUpdates$8 = $as_sci_Map(this$26.updated__O__O__sci_MapOps(self$1, upd));
+$c_Lmarge_syntax_Program2$RxGraph.prototype.deactivate__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$RxGraph = (function(l1, l2, l3) {
+  var this$2 = $n(this.Lmarge_syntax_Program2$RxGraph__f_act);
+  var elem = new $c_T3(l1, l2, l3);
+  var act$8 = $as_sci_Set(this$2.excl__O__sci_SetOps(elem));
   var edg$8 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
   var on$8 = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var off$8 = this.Lmarge_syntax_Program2$RxGraph__f_off;
+  var lbls$8 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
   var inits$8 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
   var val_env$8 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
   var clocks$8 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
   var clock_env$8 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
   var invariants$8 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
+  var edgeConditions$8 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
+  var edgeUpdates$8 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
   return new $c_Lmarge_syntax_Program2$RxGraph(edg$8, on$8, off$8, lbls$8, inits$8, act$8, val_env$8, clocks$8, clock_env$8, invariants$8, edgeConditions$8, edgeUpdates$8)
-});
-$c_Lmarge_syntax_Program2$RxGraph.prototype.deactivate__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$RxGraph = (function(l1, l2, l3) {
-  var this$2 = $n(this.Lmarge_syntax_Program2$RxGraph__f_act);
-  var elem = new $c_T3(l1, l2, l3);
-  var act$5 = $as_sci_Set(this$2.excl__O__sci_SetOps(elem));
-  var edg$5 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
-  var on$5 = this.Lmarge_syntax_Program2$RxGraph__f_on;
-  var off$5 = this.Lmarge_syntax_Program2$RxGraph__f_off;
-  var lbls$5 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
-  var inits$5 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
-  var val_env$5 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
-  var clocks$5 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
-  var clock_env$5 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
-  var invariants$5 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
-  var edgeConditions$5 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
-  var edgeUpdates$5 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
-  return new $c_Lmarge_syntax_Program2$RxGraph(edg$5, on$5, off$5, lbls$5, inits$5, act$5, val_env$5, clocks$5, clock_env$5, invariants$5, edgeConditions$5, edgeUpdates$5)
 });
 $c_Lmarge_syntax_Program2$RxGraph.prototype.addInit__Lmarge_syntax_Program2$QName__Lmarge_syntax_Program2$RxGraph = (function(s) {
   var this$1 = $n(this.Lmarge_syntax_Program2$RxGraph__f_inits);
-  var inits$2 = $as_sci_Set(this$1.incl__O__sci_SetOps(s));
+  var inits$1 = $as_sci_Set(this$1.incl__O__sci_SetOps(s));
+  var edg$1 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
+  var on$1 = this.Lmarge_syntax_Program2$RxGraph__f_on;
+  var off$1 = this.Lmarge_syntax_Program2$RxGraph__f_off;
+  var lbls$1 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
+  var act$1 = this.Lmarge_syntax_Program2$RxGraph__f_act;
+  var val_env$1 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
+  var clocks$1 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
+  var clock_env$1 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
+  var invariants$1 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
+  var edgeConditions$1 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
+  var edgeUpdates$1 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
+  return new $c_Lmarge_syntax_Program2$RxGraph(edg$1, on$1, off$1, lbls$1, inits$1, act$1, val_env$1, clocks$1, clock_env$1, invariants$1, edgeConditions$1, edgeUpdates$1)
+});
+$c_Lmarge_syntax_Program2$RxGraph.prototype.addVariable__Lmarge_syntax_Program2$QName__I__Lmarge_syntax_Program2$RxGraph = (function(name, value) {
+  var this$3 = $n(this.Lmarge_syntax_Program2$RxGraph__f_val_env);
+  var val_env$2 = $as_sci_Map(this$3.updated__O__O__sci_MapOps(name, value));
   var edg$2 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
   var on$2 = this.Lmarge_syntax_Program2$RxGraph__f_on;
   var off$2 = this.Lmarge_syntax_Program2$RxGraph__f_off;
   var lbls$2 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
+  var inits$2 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
   var act$2 = this.Lmarge_syntax_Program2$RxGraph__f_act;
-  var val_env$2 = this.Lmarge_syntax_Program2$RxGraph__f_val_env;
   var clocks$2 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
   var clock_env$2 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
   var invariants$2 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
   var edgeConditions$2 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
   var edgeUpdates$2 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
   return new $c_Lmarge_syntax_Program2$RxGraph(edg$2, on$2, off$2, lbls$2, inits$2, act$2, val_env$2, clocks$2, clock_env$2, invariants$2, edgeConditions$2, edgeUpdates$2)
-});
-$c_Lmarge_syntax_Program2$RxGraph.prototype.addVariable__Lmarge_syntax_Program2$QName__I__Lmarge_syntax_Program2$RxGraph = (function(name, value) {
-  var this$3 = $n(this.Lmarge_syntax_Program2$RxGraph__f_val_env);
-  var val_env$3 = $as_sci_Map(this$3.updated__O__O__sci_MapOps(name, value));
-  var edg$3 = this.Lmarge_syntax_Program2$RxGraph__f_edg;
-  var on$3 = this.Lmarge_syntax_Program2$RxGraph__f_on;
-  var off$3 = this.Lmarge_syntax_Program2$RxGraph__f_off;
-  var lbls$3 = this.Lmarge_syntax_Program2$RxGraph__f_lbls;
-  var inits$3 = this.Lmarge_syntax_Program2$RxGraph__f_inits;
-  var act$3 = this.Lmarge_syntax_Program2$RxGraph__f_act;
-  var clocks$3 = this.Lmarge_syntax_Program2$RxGraph__f_clocks;
-  var clock_env$3 = this.Lmarge_syntax_Program2$RxGraph__f_clock_env;
-  var invariants$3 = this.Lmarge_syntax_Program2$RxGraph__f_invariants;
-  var edgeConditions$3 = this.Lmarge_syntax_Program2$RxGraph__f_edgeConditions;
-  var edgeUpdates$3 = this.Lmarge_syntax_Program2$RxGraph__f_edgeUpdates;
-  return new $c_Lmarge_syntax_Program2$RxGraph(edg$3, on$3, off$3, lbls$3, inits$3, act$3, val_env$3, clocks$3, clock_env$3, invariants$3, edgeConditions$3, edgeUpdates$3)
 });
 $c_Lmarge_syntax_Program2$RxGraph.prototype.$plus$plus__Lmarge_syntax_Program2$RxGraph__Lmarge_syntax_Program2$RxGraph = (function(r) {
   var edg = $m_Lmarge_syntax_Program2$().join__sci_Map__sci_Map__sci_Map(this.Lmarge_syntax_Program2$RxGraph__f_edg, $n(r).Lmarge_syntax_Program2$RxGraph__f_edg);

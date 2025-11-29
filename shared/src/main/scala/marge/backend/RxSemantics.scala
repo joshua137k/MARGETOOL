@@ -2,7 +2,6 @@ package marge.backend
 
 import marge.syntax.Program2.{ Edge, Edges, QName, RxGraph}
 import marge.syntax.{Condition, CounterUpdate, Statement, UpdateExpr, UpdateStmt, IfThenStmt}
-import scala.scalajs.js.Dynamic.global
 import marge.syntax.Program2.showEdge
 import marge.syntax.Program2.showEdges
 import scala.annotation.tailrec
