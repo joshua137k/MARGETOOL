@@ -5168,6 +5168,14 @@ function $p_Lmarge_backend_PdlEvaluator$__evaluateFormula__Lmarge_syntax_Program
       return false
     };
     var x31 = formula$tailLocal1;
+    var x = $m_Lmarge_syntax_Formula$True$();
+    if ((x === x31)) {
+      return true
+    };
+    var x$3 = $m_Lmarge_syntax_Formula$False$();
+    if ((x$3 === x31)) {
+      return false
+    };
     if ((x31 instanceof $c_Lmarge_syntax_Formula$StateProp)) {
       var x$1 = $as_Lmarge_syntax_Formula$StateProp(x31);
       var this$2 = $n(x$1);
@@ -9621,11 +9629,33 @@ $c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaidSimple__T = (functi
   var this$2 = $n($$x1);
   return $as_T((this$2.isEmpty__Z() ? "" : this$2.get__O()))
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaid = (function() {
-  return this.getCurrentStateMermaid__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaidSimple = (function() {
+  return this.getCurrentStateMermaidSimple__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateText = (function() {
+  return this.getCurrentStateText__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getStats = (function() {
+  return this.getStats__T()
 });
 $c_Lmarge_frontend_MargeAPI$.prototype.getUppaalGLTS = (function() {
   return this.getUppaalGLTS__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getAllStepsMermaid = (function() {
+  return this.getAllStepsMermaid__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.getExamples = (function() {
+  return this.getExamples__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.undo = (function() {
+  return this.undo__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.checkProblems = (function() {
+  return this.checkProblems__T()
+});
+$c_Lmarge_frontend_MargeAPI$.prototype.advanceTime = (function(arg) {
+  var prep0 = $uD(arg);
+  return this.advanceTime__D__T(prep0)
 });
 $c_Lmarge_frontend_MargeAPI$.prototype.getUppaalTGRG = (function() {
   return this.getUppaalTGRG__T()
@@ -9633,49 +9663,27 @@ $c_Lmarge_frontend_MargeAPI$.prototype.getUppaalTGRG = (function() {
 $c_Lmarge_frontend_MargeAPI$.prototype.getMcrl2 = (function() {
   return this.getMcrl2__T()
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.advanceTime = (function(arg) {
-  var prep0 = $uD(arg);
-  return this.advanceTime__D__T(prep0)
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaidSimple = (function() {
-  return this.getCurrentStateMermaidSimple__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getAllStepsMermaid = (function() {
-  return this.getAllStepsMermaid__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getStats = (function() {
-  return this.getStats__T()
-});
 $c_Lmarge_frontend_MargeAPI$.prototype.takeStep = (function(arg) {
   var prep0 = $as_T(arg);
   return this.takeStep__T__T(prep0)
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateText = (function() {
-  return this.getCurrentStateText__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getCurrentStateMermaid = (function() {
+  return this.getCurrentStateMermaid__T()
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.getExamples = (function() {
-  return this.getExamples__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.loadModel = (function(arg) {
+  var prep0 = $as_T(arg);
+  return this.loadModel__T__T(prep0)
 });
 $c_Lmarge_frontend_MargeAPI$.prototype.runPdl = (function(arg, arg$2) {
   var prep0 = $as_T(arg);
   var prep1 = $as_T(arg$2);
   return this.runPdl__T__T__T(prep0, prep1)
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.checkProblems = (function() {
-  return this.checkProblems__T()
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalRG = (function() {
-  return this.getUppaalRG__T()
-});
 $c_Lmarge_frontend_MargeAPI$.prototype.translateToGLTS = (function() {
   return this.translateToGLTS__T()
 });
-$c_Lmarge_frontend_MargeAPI$.prototype.loadModel = (function(arg) {
-  var prep0 = $as_T(arg);
-  return this.loadModel__T__T(prep0)
-});
-$c_Lmarge_frontend_MargeAPI$.prototype.undo = (function() {
-  return this.undo__T()
+$c_Lmarge_frontend_MargeAPI$.prototype.getUppaalRG = (function() {
+  return this.getUppaalRG__T()
 });
 var $d_Lmarge_frontend_MargeAPI$ = new $TypeData().initClass({
   Lmarge_frontend_MargeAPI$: 0
@@ -11504,9 +11512,18 @@ function $p_Lmarge_syntax_PdlParser$__parseAtom__Lmarge_syntax_PdlParser$TokenRe
     var f = $p_Lmarge_syntax_PdlParser$__parseIff__Lmarge_syntax_PdlParser$TokenReader__Lmarge_syntax_Formula($thiz, reader);
     $n(reader).expect__T__V(")");
     return f
+  } else if (($n(reader).current__T() === "true")) {
+    $n(reader).consume__T();
+    return $m_Lmarge_syntax_Formula$True$()
   } else {
-    var name = $p_Lmarge_syntax_PdlParser$__parseQName__Lmarge_syntax_PdlParser$TokenReader__Lmarge_syntax_Program2$QName($thiz, reader);
-    return new $c_Lmarge_syntax_Formula$StateProp(name)
+    if (($n(reader).current__T() === "false")) {
+      $n(reader).consume__T();
+      var $$x1 = $m_Lmarge_syntax_Formula$False$()
+    } else {
+      var name = $p_Lmarge_syntax_PdlParser$__parseQName__Lmarge_syntax_PdlParser$TokenReader__Lmarge_syntax_Program2$QName($thiz, reader);
+      var $$x1 = new $c_Lmarge_syntax_Formula$StateProp(name)
+    };
+    return $as_Lmarge_syntax_Formula($$x1)
   }
 }
 function $p_Lmarge_syntax_PdlParser$__parseChoice__Lmarge_syntax_PdlParser$TokenReader__Lmarge_syntax_PdlProgram($thiz, reader) {
@@ -36685,6 +36702,106 @@ var $d_jl_JSConsoleBasedPrintStream = new $TypeData().initClass({
   jl_Appendable: 1
 });
 $c_jl_JSConsoleBasedPrintStream.prototype.$classData = $d_jl_JSConsoleBasedPrintStream;
+/** @constructor */
+function $c_Lmarge_syntax_Formula$False$() {
+  /*<skip>*/
+}
+$c_Lmarge_syntax_Formula$False$.prototype = new $h_O();
+$c_Lmarge_syntax_Formula$False$.prototype.constructor = $c_Lmarge_syntax_Formula$False$;
+/** @constructor */
+function $h_Lmarge_syntax_Formula$False$() {
+  /*<skip>*/
+}
+$h_Lmarge_syntax_Formula$False$.prototype = $c_Lmarge_syntax_Formula$False$.prototype;
+$c_Lmarge_syntax_Formula$False$.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_s_Product$$anon$1(this)
+});
+$c_Lmarge_syntax_Formula$False$.prototype.hashCode__I = (function() {
+  return 67643651
+});
+$c_Lmarge_syntax_Formula$False$.prototype.toString__T = (function() {
+  return "False"
+});
+$c_Lmarge_syntax_Formula$False$.prototype.productArity__I = (function() {
+  return 0
+});
+$c_Lmarge_syntax_Formula$False$.prototype.productPrefix__T = (function() {
+  return "False"
+});
+$c_Lmarge_syntax_Formula$False$.prototype.productElement__I__O = (function(n) {
+  throw $ct_jl_IndexOutOfBoundsException__T__(new $c_jl_IndexOutOfBoundsException(), ("" + n))
+});
+var $d_Lmarge_syntax_Formula$False$ = new $TypeData().initClass({
+  Lmarge_syntax_Formula$False$: 0
+}, false, "marge.syntax.Formula$False$", {
+  Lmarge_syntax_Formula$False$: 1,
+  O: 1,
+  Lmarge_syntax_Formula: 1,
+  s_Equals: 1,
+  s_Product: 1,
+  Ljava_io_Serializable: 1,
+  s_deriving_Mirror: 1,
+  s_deriving_Mirror$Product: 1,
+  s_deriving_Mirror$Singleton: 1
+});
+$c_Lmarge_syntax_Formula$False$.prototype.$classData = $d_Lmarge_syntax_Formula$False$;
+var $n_Lmarge_syntax_Formula$False$;
+function $m_Lmarge_syntax_Formula$False$() {
+  if ((!$n_Lmarge_syntax_Formula$False$)) {
+    $n_Lmarge_syntax_Formula$False$ = new $c_Lmarge_syntax_Formula$False$()
+  };
+  return $n_Lmarge_syntax_Formula$False$
+}
+/** @constructor */
+function $c_Lmarge_syntax_Formula$True$() {
+  /*<skip>*/
+}
+$c_Lmarge_syntax_Formula$True$.prototype = new $h_O();
+$c_Lmarge_syntax_Formula$True$.prototype.constructor = $c_Lmarge_syntax_Formula$True$;
+/** @constructor */
+function $h_Lmarge_syntax_Formula$True$() {
+  /*<skip>*/
+}
+$h_Lmarge_syntax_Formula$True$.prototype = $c_Lmarge_syntax_Formula$True$.prototype;
+$c_Lmarge_syntax_Formula$True$.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_s_Product$$anon$1(this)
+});
+$c_Lmarge_syntax_Formula$True$.prototype.hashCode__I = (function() {
+  return 2615726
+});
+$c_Lmarge_syntax_Formula$True$.prototype.toString__T = (function() {
+  return "True"
+});
+$c_Lmarge_syntax_Formula$True$.prototype.productArity__I = (function() {
+  return 0
+});
+$c_Lmarge_syntax_Formula$True$.prototype.productPrefix__T = (function() {
+  return "True"
+});
+$c_Lmarge_syntax_Formula$True$.prototype.productElement__I__O = (function(n) {
+  throw $ct_jl_IndexOutOfBoundsException__T__(new $c_jl_IndexOutOfBoundsException(), ("" + n))
+});
+var $d_Lmarge_syntax_Formula$True$ = new $TypeData().initClass({
+  Lmarge_syntax_Formula$True$: 0
+}, false, "marge.syntax.Formula$True$", {
+  Lmarge_syntax_Formula$True$: 1,
+  O: 1,
+  Lmarge_syntax_Formula: 1,
+  s_Equals: 1,
+  s_Product: 1,
+  Ljava_io_Serializable: 1,
+  s_deriving_Mirror: 1,
+  s_deriving_Mirror$Product: 1,
+  s_deriving_Mirror$Singleton: 1
+});
+$c_Lmarge_syntax_Formula$True$.prototype.$classData = $d_Lmarge_syntax_Formula$True$;
+var $n_Lmarge_syntax_Formula$True$;
+function $m_Lmarge_syntax_Formula$True$() {
+  if ((!$n_Lmarge_syntax_Formula$True$)) {
+    $n_Lmarge_syntax_Formula$True$ = new $c_Lmarge_syntax_Formula$True$()
+  };
+  return $n_Lmarge_syntax_Formula$True$
+}
 function $p_sc_StrictOptimizedLinearSeqOps__loop$2__I__sc_LinearSeq__sc_LinearSeq($thiz, n, s) {
   while (true) {
     if (((n <= 0) || $n(s).isEmpty__Z())) {

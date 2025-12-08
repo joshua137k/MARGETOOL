@@ -127,6 +127,12 @@ object PdlParser {
       val f = parseFormula(reader)
       reader.expect(")")
       f
+    } else if (reader.current == "true") {
+      reader.consume()
+      True
+    } else if (reader.current == "false") {
+      reader.consume()
+      False
     } else {
       StateProp(parseQName(reader))
     }

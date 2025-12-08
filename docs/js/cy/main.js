@@ -39,31 +39,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-function loadExample() {
-    var select = document.getElementById("examplesSelect");
-    var code = select.value;
-    if (code) {
-        editor.setValue(code);
-    }
-}
-
-function loadAndRender() {
-    var code = editor.getValue();
-    var jsonString = Marge.loadModel(code);
-    var data = JSON.parse(jsonString);
-    
-    if (data.error) {
-        alert(data.error);
-    } else {
-        textTraceHistory = [];
-        jsTextHistory = [];
-        var initialStateText = Marge.getCurrentStateText(); 
-        jsTextHistory.push({ label: "Start ->", text: initialStateText });
-        renderCytoscapeGraph("cytoscapeMainContainer", data, true);
-        
-        updateAllViews(jsonString);
-    }
-}
 
 function updateAllViews(jsonResponse) {
     if (!jsonResponse || jsonResponse.startsWith('{"error"')) {
@@ -236,6 +211,8 @@ async function setupInitialCytoscape(mainContainerId, data) {
     });
 
     currentCytoscapeInstance = cy;
+
+    setupContextMenu(cy);
 }
 
 
@@ -254,7 +231,6 @@ function changeEdgeStyle(styleName) {
         edges.style({ 'curve-style': 'straight' });
     }
 }
-
 
 function renderGlobalPanel(data) {
     var panelDiv = document.getElementById('sidePanel');
@@ -339,7 +315,6 @@ function renderGlobalPanel(data) {
                     }
                 };
 
-
                 var spanBtn = document.createElement('span');
                 spanBtn.className = 'input-group-btn';
                 
@@ -377,7 +352,43 @@ function renderGlobalPanel(data) {
     }
 
     panelDiv.appendChild(document.createElement('hr'));
-    renderLayoutControls(panelDiv); 
+
+    
+    var panelGroup = document.createElement('div');
+    panelGroup.className = 'panel-group';
+    panelGroup.id = 'layoutSettingsGroup'; 
+    panelGroup.style.marginBottom = '10px';
+
+    var layoutPanel = document.createElement('div');
+    layoutPanel.className = 'panel panel-default';
+
+    var panelHeading = document.createElement('div');
+    panelHeading.className = 'panel-heading';
+    panelHeading.style.padding = '5px 10px';
+    
+    var titleHtml = `
+        <h4 class="panel-title" style="font-size: 12px;">
+            <a data-toggle="collapse" href="#collapseLayout" style="text-decoration: none; display: block;">
+                <span class="glyphicon glyphicon-cog"></span> Configurações de Layout <span class="caret"></span>
+            </a>
+        </h4>`;
+    panelHeading.innerHTML = titleHtml;
+
+    var collapseBody = document.createElement('div');
+    collapseBody.id = 'collapseLayout';
+    collapseBody.className = 'panel-collapse collapse'; 
+
+    var panelBody = document.createElement('div');
+    panelBody.className = 'panel-body';
+
+    renderLayoutControls(panelBody);
+
+    collapseBody.appendChild(panelBody);
+    layoutPanel.appendChild(panelHeading);
+    layoutPanel.appendChild(collapseBody);
+    panelGroup.appendChild(layoutPanel);
+
+    panelDiv.appendChild(panelGroup);
 }
 
 function renderLayoutControls(container) {
@@ -590,12 +601,7 @@ function renderMermaidView() {
     }
 }
 
-function runPdl() {
-    var s = document.getElementById("pdlState").value;
-    var f = document.getElementById("pdlFormula").value;
-    var res = Marge.runPdl(s, f);
-    document.getElementById("pdlResult").innerText = res;
-}
+
 
 
 function downloadString(filename, content) {
@@ -608,7 +614,7 @@ function downloadString(filename, content) {
 
 function downloadMcrl2() { downloadString("model.mcrl2", Marge.getMcrl2()); }
 
-function downloadUppaal(type) {
+function downloadUppaal(loadAndRendertype) {
     var content = ""; var name = "model.xml";
     if (type === 'glts') { content = Marge.getUppaalGLTS(); name = "model_glts.xml"; }
     else if (type === 'rg') { content = Marge.getUppaalRG(); name = "model_rg.xml"; }
@@ -618,16 +624,7 @@ function downloadUppaal(type) {
     else alert("Modelo não carregado.");
 }
 
-function translateToGLTS() {
-    var newCode = Marge.translateToGLTS();
-    if (newCode && !newCode.startsWith("Erro")) {
-        editor.setValue(newCode);
-        loadAndRender();
-        alert("Traduzido com sucesso!");
-    } else {
-        alert(newCode);
-    }
-}
+
 
 function showStats() {
     document.getElementById("analysisResult").innerText = Marge.getStats();

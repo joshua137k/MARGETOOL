@@ -62,6 +62,8 @@ object PdlEvaluator {
     if (config.inits.isEmpty) return false
 
     formula match {
+      case True => true
+      case False => false
       case StateProp(name) =>
         config.inits.contains(name)
 

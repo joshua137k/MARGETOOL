@@ -7,6 +7,8 @@ import marge.syntax.Condition.*
 
 sealed trait Formula
 object Formula {
+  case object True extends Formula
+  case object False extends Formula
   case class StateProp(name: QName) extends Formula      // Representa uma verificação de estado, ex: "s1"
   case class CondProp(cond: Condition) extends Formula // Representa uma verificação de condição, ex: "[c < 2]"
   case class Not(p: Formula) extends Formula
