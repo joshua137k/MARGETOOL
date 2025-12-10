@@ -11,8 +11,17 @@ function setupContextMenu(cy) {
         return false;
     };
 
+
+
     cy.on('cxttap', function(event) {
         var menu = document.getElementById('cy-context-menu');
+        if (menu) {
+            menu.oncontextmenu = function(e) {
+                e.preventDefault(); 
+                e.stopPropagation(); 
+                return false;
+            };
+        }
         var list = menu.querySelector('ul');
         list.innerHTML = ''; 
 

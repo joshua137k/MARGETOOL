@@ -7,13 +7,15 @@ function loadExample() {
         editor.setValue(code);
     }
 }
+
 function runPdl() {
     var s = document.getElementById("pdlState").value;
     var visualFormula = document.getElementById("pdlFormula").value;
     
-    var tempCode = visualFormula
-        .replace(/⟨/g, '<')
-        .replace(/⟩/g, '>')
+
+    var protectedCode = visualFormula
+        .replace(/⟨/g, '___DIAM_OPEN___')
+        .replace(/⟩/g, '___DIAM_CLOSE___')
         .replace(/¬/g, '!')
         .replace(/∧/g, '&&')
         .replace(/∨/g, '||')
@@ -24,22 +26,30 @@ function runPdl() {
 
 
     
-    var codeFormula = tempCode.replace(
-        /\b([a-zA-Z_][\w\.]*)\s*(=|==|≠|!=|≤|<=|≥|>=|<|>)\s*(-?\d+(\.\d+)?|[a-zA-Z_][\w\.]*)\b/g,
-        function(match, v1, op, v2) {
-            var backendOp = op;
-            if (op === '=' || op === '==') backendOp = '==';
-            if (op === '≠' || op === '!=') backendOp = '!=';
-            if (op === '≤' || op === '<=') backendOp = '<=';
-            if (op === '≥' || op === '>=') backendOp = '>=';
-            
-            return '[' + v1 + ' ' + backendOp + ' ' + v2 + ']';
-        }
-    );
+    var regexComparison = /\b([a-zA-Z_][\w\.]*)\s*(=|==|≠|!=|≤|<=|≥|>=|<|>)\s*(-?\d+(?:\.\d+)?|[a-zA-Z_][\w\.]*)\b/g;
 
-    console.log("Enviando para backend:", codeFormula); 
+    var codeWithVars = protectedCode.replace(regexComparison, function(match, v1, op, v2) {
+        
+        if (['true', 'false', '___DIAM_OPEN___', '___DIAM_CLOSE___'].includes(v1)) return match;
 
-    var res = Marge.runPdl(s, codeFormula);
+        var backendOp = op;
+        if (op === '=' || op === '==') backendOp = '==';
+        if (op === '≠' || op === '!=') backendOp = '!=';
+        if (op === '≤' || op === '<=') backendOp = '<=';
+        if (op === '≥' || op === '>=') backendOp = '>=';
+        
+        return '[' + v1 + ' ' + backendOp + ' ' + v2 + ']';
+    });
+
+
+    var finalCode = codeWithVars
+        .replace(/___DIAM_OPEN___/g, '<')
+        .replace(/___DIAM_CLOSE___/g, '>');
+
+    console.log("Fórmula Original:", visualFormula);
+    console.log("Enviando Backend:", finalCode); 
+
+    var res = Marge.runPdl(s, finalCode);
     
     var resDiv = document.getElementById("pdlResult");
     resDiv.innerText = res;
@@ -51,7 +61,7 @@ function runPdl() {
         resDiv.style.color = "red";
         resDiv.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Falso';
     } else {
-        resDiv.style.color = "#d4d4d4ff";
+        resDiv.style.color = "#e0e0e0ff";
     }
 }
 
@@ -213,3 +223,5 @@ function insertPdl(text, suffix) {
     }
     input.focus();
 }
+
+

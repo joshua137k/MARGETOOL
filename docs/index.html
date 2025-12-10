@@ -312,7 +312,29 @@
             theme: "marge-light"
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            try {
 
+                var examplesJson =  Marge.getExamples();
+                var examples = JSON.parse(examplesJson);
+                var select = document.getElementById("examplesSelect");
+                var exampleToLoad = "Simple"; 
+
+                if (examples[exampleToLoad]) {
+                    select.value = examples[exampleToLoad];
+                    
+                    setTimeout(function() {
+                        if (typeof loadExample === 'function' && typeof loadAndRender === 'function') {
+                            loadExample();
+                            loadAndRender();
+                        }
+                    }, 100);
+                }
+
+            } catch(e) { console.error("Erro ao carregar exemplos", e); }
+        });
+    </script>
 </body>
 
 </html>

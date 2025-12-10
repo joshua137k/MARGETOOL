@@ -475,12 +475,10 @@ h3, h4, h5 {
     border-bottom: 2px solid #d73a49;
 }
 
-/* Garante que o modal fique acima do menu de contexto (que é 99999) */
 #quickModal {
     z-index: 100005 !important; 
 }
 
-/* Garante que o fundo escuro do modal também fique acima de tudo */
 .modal-backdrop {
     z-index: 100004 !important; 
 }
