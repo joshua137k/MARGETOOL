@@ -1,7 +1,7 @@
-package marge.backend
-import marge.syntax.Program2
-import marge.syntax.Program2.{Edge, QName, RxGraph}
-import marge.syntax.Condition
+package rta.backend
+import rta.syntax.Program2
+import rta.syntax.Program2.{Edge, QName, RxGraph}
+import rta.syntax.Condition
 
 import scala.xml._
 import scala.collection.mutable

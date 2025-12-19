@@ -1,6 +1,6 @@
-package marge.backend
+package rta.backend
 
-import marge.syntax.Program2.{Edges, RxGraph,showEdges,QName,Edge}
+import rta.syntax.Program2.{Edges, RxGraph,showEdges,QName,Edge}
 
 object AnalyseLTS:
 

@@ -1,7 +1,7 @@
-package marge.backend
+package rta.backend
 
-import marge.syntax.Program2.{Edge, RxGraph, QName}
-import marge.syntax.{Condition, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
+import rta.syntax.Program2.{Edge, RxGraph, QName}
+import rta.syntax.{Condition, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
 
 object CytoscapeConverter {
 

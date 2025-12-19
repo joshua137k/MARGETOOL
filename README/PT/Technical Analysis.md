@@ -1,4 +1,4 @@
-### **Análise Técnica das Implementações no Projeto MARGe**
+### **Análise Técnica das Implementações no Projeto RTA**
 
 O trabalho realizado consistiu na modernização e extensão de uma ferramenta de animação de sistemas formais, aplicando princípios de engenharia de software para criar uma plataforma robusta, interativa e interoperável. As principais contribuições podem ser divididas em quatro áreas de implementação: **Frontend Interativo**, **Backend Semântico**, a **Ponte de Comunicação Scala.js/JavaScript**, e os **Módulos de Integração**.
 
@@ -58,9 +58,9 @@ A ligação entre o backend Scala (compilado em JavaScript) e o frontend é um e
 
 #### **4. Módulos de Integração: Tradutores e Exportadores**
 
-O projeto evoluiu além de uma ferramenta monolítica, passando a incluir compiladores que traduzem os formalismos do MARGe para outras ferramentas.
+O projeto evoluiu além de uma ferramenta monolítica, passando a incluir compiladores que traduzem os formalismos do RTA para outras ferramentas.
 
-* **Tradutor RG → GLTS (`MaRGeTranslator.scala`):** Implementa um compilador que transforma um Grafo Reativo (com regras dinâmicas) num Grafo Reativo Guardado (GRG), simulando a reconfiguração com variáveis de controlo `_active` e guardas condicionais. Preserva a semântica original, reduzindo a reconfiguração ao nível dos dados.
+* **Tradutor RG → GLTS (`RTATranslator.scala`):** Implementa um compilador que transforma um Grafo Reativo (com regras dinâmicas) num Grafo Reativo Guardado (GRG), simulando a reconfiguração com variáveis de controlo `_active` e guardas condicionais. Preserva a semântica original, reduzindo a reconfiguração ao nível dos dados.
 
 * **Exportadores UPPAAL (`UppaalConverter.scala`, `UppaalConverter2.scala`):** Geradores de código que percorrem o `RxGraph` e constroem uma árvore XML correspondente ao formato `.xta` do UPPAAL.
 

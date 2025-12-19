@@ -49,7 +49,7 @@ function runPdl() {
     console.log("Fórmula Original:", visualFormula);
     console.log("Enviando Backend:", finalCode); 
 
-    var res = Marge.runPdl(s, finalCode);
+    var res = RTA.runPdl(s, finalCode);
     
     var resDiv = document.getElementById("pdlResult");
     resDiv.innerText = res;
@@ -67,7 +67,7 @@ function runPdl() {
 
 function loadAndRender() {
     var code = editor.getValue();
-    var jsonString = Marge.loadModel(code);
+    var jsonString = RTA.loadModel(code);
     var data = JSON.parse(jsonString);
     
     if (data.error) {
@@ -75,7 +75,7 @@ function loadAndRender() {
     } else {
         textTraceHistory = [];
         jsTextHistory = [];
-        var initialStateText = Marge.getCurrentStateText(); 
+        var initialStateText = RTA.getCurrentStateText(); 
         jsTextHistory.push({ label: "Start ->", text: initialStateText });
         renderCytoscapeGraph("cytoscapeMainContainer", data, true);
         
@@ -103,7 +103,7 @@ function addMenuItem(list, text, onClick) {
 
 
 function translateToGLTS() {
-    var newCode = Marge.translateToGLTS();
+    var newCode = RTA.translateToGLTS();
     if (newCode && !newCode.startsWith("Erro")) {
         editor.setValue(newCode);
         loadAndRender();

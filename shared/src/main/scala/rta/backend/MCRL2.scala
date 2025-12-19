@@ -1,8 +1,8 @@
-package marge.backend
+package rta.backend
 
-//import marge.frontend.Examples
-import marge.syntax.Parser2
-import marge.syntax.Program2.{QName, RxGraph}
+//import rta.frontend.Examples
+import rta.syntax.Parser2
+import rta.syntax.Program2.{QName, RxGraph}
 
 object MCRL2:
   def apply(rx: RxGraph): String =

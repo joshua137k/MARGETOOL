@@ -1,10 +1,10 @@
-### **Comprehensive Guide to Modeling and Verification with the MARGe Platform**
+### **Comprehensive Guide to Modeling and Verification with the RTA Platform**
 
-This document serves as a complete guide for using the MARGe platform. It begins by detailing the syntax of the modeling language, explaining each of its components. Then, it demonstrates how to apply this syntax to construct practical models, ranging from simple systems to complex ones with state and timing. Finally, it shows how to use **Propositional Dynamic Logic (PDL)** to formally verify the properties of your models.
+This document serves as a complete guide for using the RTA platform. It begins by detailing the syntax of the modeling language, explaining each of its components. Then, it demonstrates how to apply this syntax to construct practical models, ranging from simple systems to complex ones with state and timing. Finally, it shows how to use **Propositional Dynamic Logic (PDL)** to formally verify the properties of your models.
 
-### 1. The Syntax of the MARGe Language
+### 1. The Syntax of the RTA Language
 
-The MARGe parser reads a text file and translates its declarations into the internal data structure `RxGraph`, which the simulation engine executes. To use the tool effectively, it is essential to understand the basic building blocks that the parser recognizes.
+The RTA parser reads a text file and translates its declarations into the internal data structure `RxGraph`, which the simulation engine executes. To use the tool effectively, it is essential to understand the basic building blocks that the parser recognizes.
 
 #### 1.1 Global Declarations
 
@@ -73,7 +73,7 @@ After `source <ARROW> target`, you can add the following optional attributes in 
 
 ### 2. Practical Modeling: Building Graphs
 
-Now let’s apply the syntax to construct different types of models supported by MARGe.
+Now let’s apply the syntax to construct different types of models supported by RTA.
 
 #### 2.1 The Basics: Simple Reactive Graphs (RG)
 
@@ -148,7 +148,7 @@ The power of PDL lies in its ability to describe **execution sequences** (`α`) 
 
 #### 3.2 Syntax and Practical Examples of PDL Formulas
 
-In the MARGe interface, enter the initial state and the formula to be verified.
+In the RTA interface, enter the initial state and the formula to be verified.
 
 * **Modality `<α>φ` (Possibility):** “Is it **possible** to execute the sequence `α` and reach a state where `φ` holds?”
 * **Modality `[α]φ` (Necessity):** “Does **every** execution of the sequence `α` necessarily lead to a state where `φ` holds?”

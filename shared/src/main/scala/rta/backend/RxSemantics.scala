@@ -1,9 +1,9 @@
-package marge.backend
+package rta.backend
 
-import marge.syntax.Program2.{ Edge, Edges, QName, RxGraph}
-import marge.syntax.{Condition, CounterUpdate, Statement, UpdateExpr, UpdateStmt, IfThenStmt}
-import marge.syntax.Program2.showEdge
-import marge.syntax.Program2.showEdges
+import rta.syntax.Program2.{ Edge, Edges, QName, RxGraph}
+import rta.syntax.{Condition, CounterUpdate, Statement, UpdateExpr, UpdateStmt, IfThenStmt}
+import rta.syntax.Program2.showEdge
+import rta.syntax.Program2.showEdges
 import scala.annotation.tailrec
 
 object RxSemantics  {

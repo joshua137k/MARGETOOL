@@ -1,16 +1,16 @@
-package marge.frontend
+package rta.frontend
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
-import marge.syntax.Parser2
-import marge.syntax.Program2.{RxGraph, Edge, QName}
-import marge.backend.{RxSemantics, CytoscapeConverter, PdlEvaluator, MCRL2, UppaalConverter, UppaalConverter2, UppaalConverter3, AnalyseLTS}
-import marge.syntax.PdlParser
-import marge.syntax.MaRGeTranslator
-import marge.syntax.Condition
+import rta.syntax.Parser2
+import rta.syntax.Program2.{RxGraph, Edge, QName}
+import rta.backend.{RxSemantics, CytoscapeConverter, PdlEvaluator, MCRL2, UppaalConverter, UppaalConverter2, UppaalConverter3, AnalyseLTS}
+import rta.syntax.PdlParser
+import rta.syntax.RTATranslator
+import rta.syntax.Condition
 
-@JSExportTopLevel("Marge")
-object MargeAPI {
+@JSExportTopLevel("RTA")
+object RTAAPI {
 
   private var currentGraph: Option[RxGraph] = None
   private var currentSource: String = ""
@@ -167,7 +167,7 @@ object MargeAPI {
   @JSExport
   def translateToGLTS(): String = {
     currentGraph match {
-      case Some(g) => MaRGeTranslator.translate_syntax(g, currentSource)
+      case Some(g) => RTATranslator.translate_syntax(g, currentSource)
       case None => "Erro: Carregue um modelo primeiro."
     }
   }

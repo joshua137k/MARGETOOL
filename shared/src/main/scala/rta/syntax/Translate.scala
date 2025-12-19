@@ -1,10 +1,10 @@
-package marge.syntax
+package rta.syntax
 
-import marge.syntax.Program2.{Edge, QName, RxGraph}
-import marge.syntax.{Condition, Statement, UpdateStmt, IfThenStmt}
+import rta.syntax.Program2.{Edge, QName, RxGraph}
+import rta.syntax.{Condition, Statement, UpdateStmt, IfThenStmt}
 
 
-object MaRGeTranslator {
+object RTATranslator {
 
   private case class Effect(effectType: String, targetLabel: QName, ruleName: QName, originalTrigger: QName)
 

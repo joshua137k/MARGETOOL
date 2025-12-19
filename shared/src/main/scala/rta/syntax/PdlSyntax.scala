@@ -1,7 +1,7 @@
-package marge.syntax
-import marge.syntax.PdlProgram
-import marge.syntax.Program2.QName
-import marge.syntax.Condition.*
+package rta.syntax
+import rta.syntax.PdlProgram
+import rta.syntax.Program2.QName
+import rta.syntax.Condition.*
 
 
 

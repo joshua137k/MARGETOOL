@@ -1,8 +1,9 @@
-# MARGE Tool (Animator of Multi Action Reactive Graphs)
+# RTA Tool (Reconfigurable Timed Automata: Animated Analysis)
 
-**MARGE** is a formal verification and animation tool for Labelled Reactive Graphs. It allows users to model reactive systems, simulate transitions step-by-step, verify properties using PDL (Propositional Dynamic Logic), and export models to Uppaal and mCRL2.
+RTA is a formal verification and animation tool for Labelled Reactive Graphs. It was developed at the Department of Mathematics, University of Aveiro, with the support of FCT (Foundation for Science and Technology).
+The tool allows users to model reactive systems, simulate transitions step-by-step, verify properties using PDL (Propositional Dynamic Logic), and export models to Uppaal and mCRL2.
 
-🔗 **Live Demo:** [https://joshua137k.github.io/MARGETOOL/](https://joshua137k.github.io/MARGETOOL/)
+🔗 **Live Demo:** [https://joshua137k.github.io/RTATOOL/](https://joshua137k.github.io/RTATOOL/)
 
 ---
 
@@ -42,7 +43,7 @@ To generate the JavaScript code that powers the HTML interface:
 
 ```bash
 # Inside sbt console:
-margeJS/fastLinkJS
+rtaJS/fastLinkJS
 ```
 
 *   **Output:** The compiled JavaScript will be placed in `docs/js/gen/main.js`.
@@ -54,10 +55,10 @@ To create the standalone executable JAR file (which includes the web server and 
 
 ```bash
 # Inside sbt console:
-margeJVM/assembly
+rtaJVM/assembly
 ```
 
-*   **Output:** `jvm/target/scala-3.3.1/MargeTool.jar`
+*   **Output:** `jvm/target/scala-3.3.1/rtaTool.jar`
 
 ---
 
@@ -67,34 +68,34 @@ margeJVM/assembly
 Simply run the generated JAR without arguments. This will start an internal web server and open your default browser with the full interface (offline).
 
 ```bash
-java -jar MargeTool.jar
+java -jar rtaTool.jar
 ```
 
 ### 2. Command Line Interface (CLI)
 You can use the JAR to perform batch conversions, verifications, and analysis without opening the GUI.
 
-**Syntax:** `java -jar MargeTool.jar [COMMAND] [OPTIONS] <INPUT_FILE>`
+**Syntax:** `java -jar rtaTool.jar [COMMAND] [OPTIONS] <INPUT_FILE>`
 
 #### Available Commands:
 
 | Command | Description | Example |
 | :--- | :--- | :--- |
-| **-text** | Prints the textual representation of the initial state. | `java -jar MargeTool.jar -text model.txt` |
-| **-mermaid** | Prints the Mermaid diagram code for the initial state. | `java -jar MargeTool.jar -mermaid model.txt` |
-| **-step** | Lists currently enabled transitions and delays. | `java -jar MargeTool.jar -step model.txt` |
-| **-lts** | Generates the full LTS (State Space) in Mermaid format. | `java -jar MargeTool.jar -lts model.txt > output.mermaid` |
-| **-pdl** | Verifies a PDL formula against the model. | `java -jar MargeTool.jar -pdl "s0" "[a]false" model.txt` |
-| **-translate** | Translates the code to GLTS syntax. | `java -jar MargeTool.jar -translate out.txt in.txt` |
-| **-uppaalRG** | Exports to Uppaal XML (Reactive Graph). | `java -jar MargeTool.jar -uppaalRG out.xml in.txt` |
-| **-uppaalGLTS** | Exports to Uppaal XML (GLTS). | `java -jar MargeTool.jar -uppaalGLTS out.xml in.txt` |
-| **-uppaalGRG** | Exports to Uppaal XML (TGRG). | `java -jar MargeTool.jar -uppaalGRG out.xml in.txt` |
+| **-text** | Prints the textual representation of the initial state. | `java -jar rtaTool.jar -text model.txt` |
+| **-mermaid** | Prints the Mermaid diagram code for the initial state. | `java -jar rtaTool.jar -mermaid model.txt` |
+| **-step** | Lists currently enabled transitions and delays. | `java -jar rtaTool.jar -step model.txt` |
+| **-lts** | Generates the full LTS (State Space) in Mermaid format. | `java -jar rtaTool.jar -lts model.txt > output.mermaid` |
+| **-pdl** | Verifies a PDL formula against the model. | `java -jar rtaTool.jar -pdl "s0" "[a]false" model.txt` |
+| **-translate** | Translates the code to GLTS syntax. | `java -jar rtaTool.jar -translate out.txt in.txt` |
+| **-uppaalRG** | Exports to Uppaal XML (Reactive Graph). | `java -jar rtaTool.jar -uppaalRG out.xml in.txt` |
+| **-uppaalGLTS** | Exports to Uppaal XML (GLTS). | `java -jar rtaTool.jar -uppaalGLTS out.xml in.txt` |
+| **-uppaalGRG** | Exports to Uppaal XML (TGRG). | `java -jar rtaTool.jar -uppaalGRG out.xml in.txt` |
 
 ---
 
 ## 📂 Project Structure
 
 *   `shared/` - Core logic (Parser, Semantics, Converters) shared between JS and JVM.
-*   `js/` - Frontend logic (Cytoscape integration, DOM manipulation, MargeAPI).
+*   `js/` - Frontend logic (Cytoscape integration, DOM manipulation, rtaAPI).
 *   `jvm/` - Desktop logic (CLI, Embedded HTTP Server).
 *   `docs/` - Static files for the web interface (HTML, CSS, Libs).
 
@@ -102,7 +103,7 @@ You can use the JAR to perform batch conversions, verifications, and analysis wi
 
 ## 📝 Example Model
 
-```marge
+```rta
 init s0
 s0 --> s1: a
 s1 --> s0: b

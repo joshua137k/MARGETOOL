@@ -1,5 +1,5 @@
-package marge.syntax
-import marge.syntax.Program2.QName
+package rta.syntax
+import rta.syntax.Program2.QName
 
 sealed trait Statement
 case class UpdateStmt(update: CounterUpdate) extends Statement

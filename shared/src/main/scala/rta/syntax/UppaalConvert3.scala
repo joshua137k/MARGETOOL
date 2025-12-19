@@ -1,8 +1,8 @@
-package marge.backend
+package rta.backend
 
-import marge.syntax.Program2
-import marge.syntax.Program2.{Edge, QName, RxGraph}
-import marge.syntax.{Condition, Statement, UpdateExpr, UpdateStmt, IfThenStmt}
+import rta.syntax.Program2
+import rta.syntax.Program2.{Edge, QName, RxGraph}
+import rta.syntax.{Condition, Statement, UpdateExpr, UpdateStmt, IfThenStmt}
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.xml._

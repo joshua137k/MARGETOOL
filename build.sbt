@@ -11,11 +11,11 @@ val osName = System.getProperty("os.name") match {
 
 val scala3Version = "3.3.1"
 
-lazy val marge = crossProject(JSPlatform, JVMPlatform)
+lazy val rta = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full) 
   .in(file("."))
   .settings(
-    name := "marge",
+    name := "rta",
     version := "0.1.0",
     scalaVersion := scala3Version,
     scalacOptions ++= Seq("-feature"),
@@ -35,12 +35,12 @@ lazy val marge = crossProject(JSPlatform, JVMPlatform)
     
    
     Compile / unmanagedResourceDirectories += baseDirectory.value.getParentFile / "docs",
-    assembly / assemblyJarName := "MargeTool.jar",
+    assembly / assemblyJarName := "RTATool.jar",
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", xs @ _*) => MergeStrategy.discard
       case x => MergeStrategy.first
     }
   )
 
-lazy val margeJS = marge.js
-lazy val margeJVM = marge.jvm
+lazy val rtaJS = rta.js
+lazy val rtaJVM = rta.jvm

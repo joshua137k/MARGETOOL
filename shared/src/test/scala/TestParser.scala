@@ -1,8 +1,8 @@
 // src/test/scala/TestParser.scala
 
 import munit.FunSuite
-import marge.syntax.Program2.*
-import marge.syntax.Parser2.program
+import rta.syntax.Program2.*
+import rta.syntax.Parser2.program
 
 class TestParser extends FunSuite {
 

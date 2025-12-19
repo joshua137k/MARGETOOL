@@ -23,7 +23,7 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 
 document.addEventListener("DOMContentLoaded", function() {
     try {
-        var examplesJson = Marge.getExamples();
+        var examplesJson = RTA.getExamples();
         var examples = JSON.parse(examplesJson);
         var select = document.getElementById("examplesSelect");
         
@@ -185,8 +185,8 @@ async function setupInitialCytoscape(mainContainerId, data) {
             var from = parts[1]; var to = parts[2]; var lbl = parts.slice(3).join('_');
             var edgeJson = JSON.stringify({ "from": from, "to": to, "lbl": lbl });
             
-            var responseJson = Marge.takeStep(edgeJson);
-            var newStateText = Marge.getCurrentStateText();
+            var responseJson = RTA.takeStep(edgeJson);
+            var newStateText = RTA.getCurrentStateText();
             jsTextHistory.push({ label: lbl + " ->", text: newStateText });
 
             updateAllViews(responseJson);
@@ -245,7 +245,7 @@ function renderGlobalPanel(data) {
     undoBtn.disabled = !panelData.canUndo;
     undoBtn.style.marginBottom = '15px';
     undoBtn.onclick = function() {
-        var json = Marge.undo();
+        var json = RTA.undo();
         if (jsTextHistory.length > 1) {
             jsTextHistory.pop();
         }
@@ -324,7 +324,7 @@ function renderGlobalPanel(data) {
                 btn.onclick = function() {
                     var val = parseFloat(input.value);
                     storedDelayValue = val; 
-                    var json = Marge.advanceTime(val);
+                    var json = RTA.advanceTime(val);
                     updateAllViews(json);
                 };
                 
@@ -341,8 +341,8 @@ function renderGlobalPanel(data) {
                 btn.innerText = edge.label;
                 btn.onclick = function() {
                     stopAutoDelay(); 
-                    var json = Marge.takeStep(JSON.stringify(edge));
-                    var newStateText = Marge.getCurrentStateText();
+                    var json = RTA.takeStep(JSON.stringify(edge));
+                    var newStateText = RTA.getCurrentStateText();
                     jsTextHistory.push({ label: edge.label + " ->", text: newStateText });
                     updateAllViews(json);
                 };
@@ -579,11 +579,11 @@ function renderMermaidView() {
     if (!currentMermaidMode) currentMermaidMode = 'full';
 
     if (currentMermaidMode === 'lts') {
-        mermaidCode = Marge.getAllStepsMermaid(); 
+        mermaidCode = RTA.getAllStepsMermaid(); 
     } else if (currentMermaidMode === 'simple') {
-        mermaidCode = Marge.getCurrentStateMermaidSimple();
+        mermaidCode = RTA.getCurrentStateMermaidSimple();
     } else {
-        mermaidCode = Marge.getCurrentStateMermaid();
+        mermaidCode = RTA.getCurrentStateMermaid();
     }
 
     if (!mermaidCode || mermaidCode.trim() === "") {
@@ -612,13 +612,13 @@ function downloadString(filename, content) {
     a.click();
 }
 
-function downloadMcrl2() { downloadString("model.mcrl2", Marge.getMcrl2()); }
+function downloadMcrl2() { downloadString("model.mcrl2", RTA.getMcrl2()); }
 
 function downloadUppaal(loadAndRendertype) {
     var content = ""; var name = "model.xml";
-    if (type === 'glts') { content = Marge.getUppaalGLTS(); name = "model_glts.xml"; }
-    else if (type === 'rg') { content = Marge.getUppaalRG(); name = "model_rg.xml"; }
-    else if (type === 'tgrg') { content = Marge.getUppaalTGRG(); name = "model_tgrg.xml"; }
+    if (type === 'glts') { content = RTA.getUppaalGLTS(); name = "model_glts.xml"; }
+    else if (type === 'rg') { content = RTA.getUppaalRG(); name = "model_rg.xml"; }
+    else if (type === 'tgrg') { content = RTA.getUppaalTGRG(); name = "model_tgrg.xml"; }
     
     if(content) downloadString(name, content);
     else alert("Modelo não carregado.");
@@ -627,11 +627,11 @@ function downloadUppaal(loadAndRendertype) {
 
 
 function showStats() {
-    document.getElementById("analysisResult").innerText = Marge.getStats();
+    document.getElementById("analysisResult").innerText = RTA.getStats();
 }
 
 function checkProblems() {
-    document.getElementById("analysisResult").innerText = Marge.checkProblems();
+    document.getElementById("analysisResult").innerText = RTA.checkProblems();
 }
 
 function stopAutoDelay() {
@@ -647,7 +647,7 @@ function toggleAutoDelay(isChecked) {
         const runStep = () => {
             var inp = document.getElementById('delayInputVal');
             var delay = inp ? parseFloat(inp.value) : 1.0;
-            var json = Marge.advanceTime(delay);
+            var json = RTA.advanceTime(delay);
             updateAllViews(json);
         };
         runStep(); 

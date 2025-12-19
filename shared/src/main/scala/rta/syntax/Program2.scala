@@ -1,8 +1,8 @@
-package marge.syntax
+package rta.syntax
 
-import marge.backend.RxSemantics
-import marge.syntax.Program2.EdgeMap
-import marge.syntax.{Condition, CounterUpdate, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
+import rta.backend.RxSemantics
+import rta.syntax.Program2.EdgeMap
+import rta.syntax.{Condition, CounterUpdate, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
 import scala.annotation.tailrec
 import scala.language.implicitConversions
 object Program2:

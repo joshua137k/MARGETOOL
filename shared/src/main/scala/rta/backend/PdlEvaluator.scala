@@ -1,12 +1,12 @@
-package marge.backend
+package rta.backend
 
-import marge.syntax.Program2.{QName, RxGraph}
-import marge.syntax.Condition
+import rta.syntax.Program2.{QName, RxGraph}
+import rta.syntax.Condition
 
-import marge.syntax.Formula as PdlFormula
-import marge.syntax.Formula.*
-import marge.syntax.PdlProgram
-import marge.syntax.PdlProgram.*
+import rta.syntax.Formula as PdlFormula
+import rta.syntax.Formula.*
+import rta.syntax.PdlProgram
+import rta.syntax.PdlProgram.*
 
 import scala.annotation.tailrec
 

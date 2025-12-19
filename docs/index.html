@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Marge Tool</title>
+    <title>RTA Tool</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/codemirror/codemirror.css" rel="stylesheet">
@@ -18,8 +18,8 @@
     <div class="container-fluid">
 
         <div style="background: #36569c; color: white; padding: 10px 20px; display: flex; align-items: center;">
-            <span style="font-size: 18px; font-weight: bold; margin-right: 20px;">Marge Tool</span>
-            <span style="font-size: 12px; opacity: 0.8;">Animator of Labelled Reactive Graphs</span>
+            <span style="font-size: 18px; font-weight: bold; margin-right: 20px;">RTA Tool</span>
+            <span style="font-size: 12px; opacity: 0.8;">Reconfigurable Timed Automata: Animated Analysis</span>
         </div>
 
         <div class="main-row">
@@ -51,9 +51,9 @@
                             </div>
                             <div id="collapseExport" class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <label>mCRL2:</label>
+                                    <!--<label>mCRL2:</label>
                                     <button class="btn btn-xs btn-default btn-block" onclick="downloadMcrl2()">Baixar
-                                        .mcrl2</button>
+                                        .mcrl2</button>-->
 
                                     <label style="margin-top: 5px;">Uppaal:</label>
                                     <div class="btn-group btn-group-justified">
@@ -276,7 +276,7 @@
 
     <script>
         mermaid.initialize({ startOnLoad: false });
-        CodeMirror.defineMode("marge", function () {
+        CodeMirror.defineMode("rta", function () {
             return {
                 token: function (stream, state) {
 
@@ -308,15 +308,15 @@
         });
         var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), {
             lineNumbers: true,
-            mode: "marge",
-            theme: "marge-light"
+            mode: "rta",
+            theme: "rta-light"
         });
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             try {
 
-                var examplesJson =  Marge.getExamples();
+                var examplesJson =  RTA.getExamples();
                 var examples = JSON.parse(examplesJson);
                 var select = document.getElementById("examplesSelect");
                 var exampleToLoad = "Simple"; 

@@ -1,12 +1,12 @@
 
 
-### **Guia Completo para Modelação e Verificação com a Plataforma MARGe**
+### **Guia Completo para Modelação e Verificação com a Plataforma RTA**
 
-Este documento serve como um guia abrangente para a utilização da plataforma MARGe. Começaremos por detalhar a sintaxe da linguagem, explicando cada elemento que a compõe. Em seguida, mostraremos como aplicar essa sintaxe para construir modelos práticos, desde sistemas simples a sistemas complexos com estado e tempo. Finalmente, demonstraremos como usar a Lógica Proposicional Dinâmica (PDL) para verificar formalmente as propriedades dos seus modelos.
+Este documento serve como um guia abrangente para a utilização da plataforma RTA. Começaremos por detalhar a sintaxe da linguagem, explicando cada elemento que a compõe. Em seguida, mostraremos como aplicar essa sintaxe para construir modelos práticos, desde sistemas simples a sistemas complexos com estado e tempo. Finalmente, demonstraremos como usar a Lógica Proposicional Dinâmica (PDL) para verificar formalmente as propriedades dos seus modelos.
 
-### 1. A Sintaxe da Linguagem MARGe
+### 1. A Sintaxe da Linguagem RTA
 
-O parser do MARGe lê um ficheiro de texto e traduz as suas declarações para a estrutura de dados interna `RxGraph`, que o motor de simulação executa. Para usar a ferramenta, é essencial compreender os blocos de construção que o parser reconhece.
+O parser do RTA lê um ficheiro de texto e traduz as suas declarações para a estrutura de dados interna `RxGraph`, que o motor de simulação executa. Para usar a ferramenta, é essencial compreender os blocos de construção que o parser reconhece.
 
 #### 1.1 Declarações Globais
 
@@ -70,7 +70,7 @@ Após `origem <SETA> destino`, pode adicionar os seguintes atributos opcionais e
 
 ### 2. Modelação na Prática: Construindo Grafos
 
-Agora, vamos aplicar a sintaxe para construir os diferentes tipos de modelos que o MARGe suporta.
+Agora, vamos aplicar a sintaxe para construir os diferentes tipos de modelos que o RTA suporta.
 
 #### 2.1 O Básico: Grafos Reativos Simples (RG)
 
@@ -152,7 +152,7 @@ O poder da PDL reside na sua capacidade de descrever sequências de execução (
 
 #### 3.2 Sintaxe e Exemplos Práticos de Fórmulas PDL
 
-Na interface do MARGe, insira o estado inicial e a fórmula a ser verificada.
+Na interface do RTA, insira o estado inicial e a fórmula a ser verificada.
 
 *   **Modalidade `<α>φ` (Possibilidade):** "É **possível** executar a sequência `α` e alcançar um estado onde `φ` é verdadeiro?"
 *   **Modalidade `[α]φ` (Necessidade):** "**Toda** execução da sequência `α` leva **necessariamente** a um estado onde `φ` é verdadeiro?"

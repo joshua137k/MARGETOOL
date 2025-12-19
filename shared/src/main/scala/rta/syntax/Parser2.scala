@@ -1,8 +1,8 @@
-package marge.syntax
+package rta.syntax
 
-import marge.syntax.Program2.{RxGraph, QName}
-import marge.syntax.{Condition, CounterUpdate, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
-import marge.syntax.Condition.*
+import rta.syntax.Program2.{RxGraph, QName}
+import rta.syntax.{Condition, CounterUpdate, UpdateExpr, Statement, UpdateStmt, IfThenStmt}
+import rta.syntax.Condition.*
 import scala.util.matching.Regex
 
 object Parser2 {

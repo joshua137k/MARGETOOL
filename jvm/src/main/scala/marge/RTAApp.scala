@@ -1,4 +1,4 @@
-package marge
+package rta
 
 import com.sun.net.httpserver.{HttpServer, HttpHandler, HttpExchange}
 import java.net.InetSocketAddress
@@ -6,11 +6,11 @@ import java.awt.Desktop
 import java.net.URI
 import java.io.{File, PrintWriter}
 import scala.io.Source
-import marge.syntax.{Parser2, PdlParser, Program2,MaRGeTranslator}
-import marge.syntax.Program2.{RxGraph, QName}
-import marge.backend.{RxSemantics, UppaalConverter,UppaalConverter2,UppaalConverter3, PdlEvaluator}
+import rta.syntax.{Parser2, PdlParser, Program2,RTATranslator}
+import rta.syntax.Program2.{RxGraph, QName}
+import rta.backend.{RxSemantics, UppaalConverter,UppaalConverter2,UppaalConverter3, PdlEvaluator}
 
-object MargeCLI {
+object RTACLI {
 
   def main(args: Array[String]): Unit = {
     if (args.isEmpty || args(0) == "-server") {
@@ -44,7 +44,7 @@ object MargeCLI {
           println(RxGraph.toMermaid(graph))
 
         case "-translate" =>
-          val translation = MaRGeTranslator.translate_syntax(graph, source)
+          val translation = RTATranslator.translate_syntax(graph, source)
           if (args.length > 2) {
             val outName = args(1)
             if (outName != inputFile) {
@@ -197,7 +197,7 @@ object MargeCLI {
   def printHelp(): Unit = {
     println(
       """
-        |Uso: java -jar MargeTool.jar [COMANDO] [OPCOES] <ARQUIVO>
+        |Uso: java -jar RTATool.jar [COMANDO] [OPCOES] <ARQUIVO>
         |
         |Sem argumentos: Abre a Interface Grafica (Navegador).
         |
